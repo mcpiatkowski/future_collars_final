@@ -1,0 +1,34 @@
+{% load static %}
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'articles/spectre.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'articles/spectre-exp.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'articles/spectre-icons.css' %}">
+    </head>
+    <body>
+        <header class="bg-secondary">
+            <div style="text-align: right;">
+                <a href="/articles/login" class="btn btn-link text-bold mr-2">Login</a>
+                <a href="/articles/register" class="btn btn-link">Register</a>
+            </div>
+        </header>
+        <div class="container" style="text-align: center;">
+            <form method="POST" action="">
+                {% csrf_token %}
+
+                <div class="form-group" style="margin: auto; width: 30%;">
+                    <label class="form-label">Username: </label>
+                    <input class="form-input" type="text" name="username" placeholder="Username...">
+                    <label class="form-label">Password: </label>
+                    <input class="form-input" style="margin-bottom: 10px;" type="password" name="password" placeholder="Password...">
+                    <input type="submit" name="Login me">
+                </div>
+            </form>
+            {% for message in messages %}
+                <p> {{ message }} </p>
+            {% endfor %}
+        </div>
+    </body>
+
+</html>

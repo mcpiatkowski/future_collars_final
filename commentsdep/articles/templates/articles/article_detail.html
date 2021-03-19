@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div style="margin-right: 20%;">
+    <div class="container">
+    <h2>{{ article.title }}</h2>
+    {{ article.content}}
+    </div>
+
+    {% for comment in article.comment_set.all %}
+    <br>
+    {% if comment.status == 'accepted'%}
+    <div class="tile bg-secondary p-2">
+        <div class="tile-icon">
+            <figure class="avatar avatar-lg">
+                <img class="icon icon-file" src="{{ comment.user.profile.image.url }}" />
+            </figure>
+        </div>
+        <div class="tile-content">
+            <p class="tile-title"> 
+                <strong>
+                {{ comment.user }} - {{comment.publication_datetime}}
+                </strong> 
+            </p>
+            <p class="tile-subtitle"> 
+                {{ comment.content }} 
+            </p>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <input class='btn' type="submit" value="Submit">
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load static %}
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'articles/spectre.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'articles/spectre-exp.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'articles/spectre-icons.css' %}">
+    </head>
+    <body>
+        <header class="bg-secondary">
+            <div style="text-align: right;">
+                <a href="/articles/login" class="btn btn-link mr-2">Login</a>
+                <a href="/articles/register" class="btn btn-link text-bold"> Register </a>
+            </div>
+            <section class="navbar-section">
+            
+            </section>
+        </header>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <div class="form-group" style="text-align:center">
+                <label class="form-label" for="input-example-1">{{ form.username.label }}</label>
+                {{ form.username }}
+                <label class="form-label" for="input-example-1">{{ form.email.label }}</label>
+                {{ form.email }}
+                <label class="form-label" for="input-example-1">{{ form.password1.label }}</label>
+                {{ form.password1 }}
+                <label class="form-label" for="input-example-1">{{ form.password2.label }} </label>
+                {{ form.password2 }}
+            </div>
+            <div style="text-align: center;">
+                <input type="submit" name="create user">
+            </div>
+        </form>
+    </body>
+</html>

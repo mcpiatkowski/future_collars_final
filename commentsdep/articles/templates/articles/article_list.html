@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for article in object_list %}
+<a href="{{ article.get_absolute_url }}" style="text-decoration: none;">
+<div class="tile forum-tile" id="tile_">
+  <div class="tile-icon">
+    <div class="example-tile-icon">
+      <i class="icon icon-bookmark centered"></i>
+    </div>
+  </div>
+  <div class="tile-content">
+    <p class="tile-title text-dark">{{ article.title }}</p>
+    <p class="tile-subtitle text-gray">{{ article.snippet }}</p>
+  </div>
+  <div class="tile-action text-tiny text-gray">
+    {{ article.publication_datetime }}
+  </div>
+</div>
+</a>
+{% endfor %}
+{% endblock %}
+
+ 

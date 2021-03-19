@@ -1,0 +1,108 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title indeed</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+        <style>
+            .table-font {font-weight: normal;}
+            .navbar-menu { margin-left: 30px; }
+            .navbar-header {text-align: center;}
+            .navbar-body {min-height: 100vh;}
+            .main-content {margin-right: 20%; margin-top: 30px; }
+            .content-overflow {overflow: auto; height: 90vh;}
+            .body {overflow: hidden; height: 100vh;}
+            .top {text-align: right;}
+            .forum-tile { transition: background-color 0.5s;}
+            .forum-tile:hover {background-color: #f1f1fc; }
+            .avatar-size {height: 4rem; width: 4rem;}
+
+            .tab-item > label:hover {
+			cursor: pointer;
+            }
+            
+            .tab-content {
+                display: none;
+            }
+            
+            .tab-locator:nth-of-type(1):checked ~ .tab-block > .tab-item:nth-of-type(1) > label > a,
+            .tab-locator:nth-of-type(2):checked ~ .tab-block > .tab-item:nth-of-type(2) > label > a,
+            .tab-locator:nth-of-type(3):checked ~ .tab-block > .tab-item:nth-of-type(3) > label > a,
+            .tab-locator:nth-of-type(4):checked ~ .tab-block > .tab-item:nth-of-type(4) > label > a {
+                border-bottom-color: #5764c6;
+                color: #5764c6;
+            }
+            
+            .tab-locator:nth-of-type(1):checked ~ .tabs > .tab-content:nth-of-type(1),
+            .tab-locator:nth-of-type(2):checked ~ .tabs > .tab-content:nth-of-type(2),
+            .tab-locator:nth-of-type(3):checked ~ .tabs > .tab-content:nth-of-type(3),
+            .tab-locator:nth-of-type(4):checked ~ .tabs > .tab-content:nth-of-type(4) {
+                display:block;
+            }
+
+            @media (min-width: 600px){
+                .off-canvas.off-canvas-sidebar-show .off-canvas-sidebar {
+                    -ms-flex: 0 0 auto;
+                    flex: 0 0 auto;
+                    position: relative;
+                    transform: none;
+                    }
+                }
+
+
+        </style>
+    </head>
+    <body>
+        <div class="off-canvas off-canvas-sidebar-show body">
+            <a class="off-canvas-toggle btn btn-primary btn-action" href="#sidebar-id">
+                <i class="icon icon-menu"></i>
+            </a>
+            <div id="sidebar-id" class="off-canvas-sidebar navbar-body">
+                <div class="navbar-header">
+                    <h1>sidebar</h1>
+                </div>
+                <div class="navbar-menu">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a href="/articles/my_site/{{ user.id }}">
+                                <i class="icon icon-people"></i>
+                                My site
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/articles">
+                                <i class="icon icon-message"></i>
+                                Forum
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <a class="off-canvas-overlay" href="#close"></a>
+
+            <div class="off-canvas-content">
+                <header>
+                    <div class="top">
+                        <span>Hello, {{ request.user }}</span>
+                        <span style="margin-left: 5px">
+                            <a href="/articles/logout"> logout </a>
+                        </span>
+                    </div>
+                    <div>
+                        <span></span>
+                    </div>
+                </header>
+                <div class="off-canvas content-overflow">
+                    <div class="container main-content">     
+                    {% block content %} {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
