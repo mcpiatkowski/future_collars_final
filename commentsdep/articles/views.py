@@ -48,6 +48,7 @@ def article_detail(request, article_id):
             for word in form.cleaned_data['comment'].split(' '):
                 if word in blacklist:
                     return redirect('articles:article-detail', article_id=article_id)
+            messages.success(request, f'Dodano komentarz')
             article.comment_set.create(user=request.user, content=form.cleaned_data['comment'])
             form = CommentForm()
     context = {

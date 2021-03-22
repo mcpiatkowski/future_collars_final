@@ -116,8 +116,13 @@
                     </div>
                 </header>
                 <div class="off-canvas content-overflow">
-                    <div class="container main-content">     
-                    {% block content %} {% endblock %}
+                    <div class="container main-content">
+                        {% if messages %}
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        {% endif %}
+                        {% block content %} {% endblock %}
                     </div>
                 </div>
             </div>

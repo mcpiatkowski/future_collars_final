@@ -52,16 +52,9 @@ class HoursWorked(models.Model):
     class Meta:
         ordering = ['-day', '-start']
 
-    def clean(self):
-        print('lipton')
-    
 
     def get_absolute_url(self):
         return f"my_site/{self.id}"
-
-
-    def duration_seconds(self):
-        pass
 
 
     #@property

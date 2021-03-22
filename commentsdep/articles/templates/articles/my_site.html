@@ -1,7 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="tile bg-gray p-2" style="margin-top: 25px;">
+<div class="container bg-gray p-2">
+    <div class="columns">
+        <div class="column col-3 col-xl-6 col-md-12">
+            <p style="margin-top: 15px; text-align: center;">
+                <a href="/articles/login_button/{{ user.id }}">
+                    {% if not login_status %}
+                    <button class="btn ml-2" style="width: 10rem; height: 4rem;">Log in</button>
+                    {% endif %}
+                </a>
+                <a href="/articles/logout_button/{{ user.id }}">
+                    {% if login_status %}
+                    <button class="btn" style="width: 10rem; height: 4rem;">Log out</button>
+                    {% endif %}
+                </a>
+            </p>
+        </div>
+        <div class="column col-2 col-xl-6 col-md-12 text-center">
+            <figure class="avatar avatar-size" style="margin-top: .6rem;">
+                <img class="icon icon-file" src="{{ user.profile.image.url }}" />
+            </figure>
+        </div>
+        <div class="column col-7 col-xl-12">
+            <p class="tile-title" style="margin-top: 1rem;"><b>{{ user.username }}</b></p>
+            <p class="tile-subtitle">{{ user.email }}</p>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<!-- <div class="tile bg-gray p-2" style="margin-top: 25px;">
     <div class="tile-icon">
         <figure class="avatar avatar-size">
             <img class="icon icon-file" src="{{ user.profile.image.url }}" />
@@ -23,7 +56,7 @@
         <p class="tile-title"><b>{{ user.username }}</b></p>
         <p class="tile-subtitle">{{ user.email }}</p>
     </div>
-</div>
+</div> -->
 {% endblock %}
 
  
