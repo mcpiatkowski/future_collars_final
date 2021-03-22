@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic.list import ListView
+from django.views.generic import CreateView
 from .models import Article, HoursWorked, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CommentForm, CreateUserForm
+from .forms import CommentForm, CreateUserForm, ArticleCreateForm
 from datetime import datetime, date
 
 """ class ArticleListView(ListView):
@@ -21,6 +22,13 @@ def article_view(request):
         'object_list': queryset,
     }
     return render(request, 'articles/article_list.html', context)
+
+
+class ArticleCreateView(CreateView):
+    template_name = 'articles/article_create.html'
+    form_class = ArticleCreateForm
+    queryset = Article.objects.all()
+    success_url = '/articles'
 
 
 @login_required(login_url='/articles/login')
@@ -57,6 +65,33 @@ def my_site_view(request, user_id):
         'login_status': user.profile.logged,
     }
     return render(request, 'articles/my_site.html', context)
+
+
+@login_required(login_url='/articles/login')
+def hours_view(request, user_id):
+    user = User.objects.get(pk=user_id)
+    context ={
+        'user': user,
+    }
+    return render(request, 'articles/hours.html', context)
+
+
+@login_required(login_url='/articles/login')
+def finance_view(request, user_id):
+    user = User.objects.get(pk=user_id)
+    context ={
+        'user': user,
+    }
+    return render(request, 'articles/finance.html', context)
+
+
+@login_required(login_url='/articles/login')
+def schedule_view(request, user_id):
+    user = User.objects.get(pk=user_id)
+    context ={
+        'user': user,
+    }
+    return render(request, 'articles/schedule.html', context)
 
 
 @login_required(login_url='/articles/login')

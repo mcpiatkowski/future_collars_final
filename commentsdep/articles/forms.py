@@ -2,7 +2,23 @@ from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Comment
+from .models import Comment, Article
+
+
+class ArticleCreateForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = [
+            'title',
+            'content',
+            'snippet',
+        ]
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-input'}),
+            'content': forms.Textarea(attrs={'class': 'form-input'}),
+            'snippet': forms.TextInput(attrs={'class': 'form-input'})
+        }
 
 
 class CommentAddForm(forms.ModelForm):

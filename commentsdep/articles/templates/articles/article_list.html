@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<div style="margin-bottom: 2em; width: 10em;">
+<a href="/articles/article_create/{{ user.id }}" style="text-decoration: none;">
+  <div class="tile tile-centered">
+    <div class="tile-icon">
+      <i class="icon icon-plus centered"></i>
+    </div>
+    <div class="tile-content">
+      <div class="tile-title pt-1">Dodaj post</div>
+    </div>
+  </div>
+</a>
+</div>
 {% for article in object_list %}
 <a href="{{ article.get_absolute_url }}" style="text-decoration: none;">
 <div class="tile forum-tile" id="tile_">

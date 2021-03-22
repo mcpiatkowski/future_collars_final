@@ -12,13 +12,17 @@ PUBLICATION_STATUSES = (
 class Article(models.Model):
     title = models.CharField(max_length=256, verbose_name='Title')
     content = models.TextField(verbose_name='Content')
-    snippet = models.TextField(verbose_name='Snippet')
+    snippet = models.CharField(max_length=120, verbose_name='Snippet')
     publication_datetime = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-publication_datetime']
     
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
+        #return reverse('articles:article-detail', kwargs={'id': self.id})
         return f"{self.id}/"
     
 

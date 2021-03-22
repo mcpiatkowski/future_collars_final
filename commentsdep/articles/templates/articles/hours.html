@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="margin-top: 15px;">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Dzień</th>
+                <th style="text-align: right;">Start</th>
+                <th style="text-align: right;">Koniec</th>
+                <th style="text-align: right;">Ilość godzin</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in user.hoursworked_set.all %}
+            <tr>
+                <th class="table-font">{{ day.day }}</th>
+                <th class="table-font" style="text-align: right;">{{day.start|time:"H:i"}}</th>
+                <th class="table-font" style="text-align: right;">{{day.finish|time:"H:i"}}</th>
+                <th class="table-font" style="text-align: right;">{{ day.duration}}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

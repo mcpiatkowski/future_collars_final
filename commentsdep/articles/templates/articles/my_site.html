@@ -1,82 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div>
-    <input type="radio" id="tab1" name="tabs" class="tab-locator" hidden checked />
-	<input type="radio" id="tab2" name="tabs" class="tab-locator" hidden />
-	<input type="radio" id="tab3" name="tabs" class="tab-locator" hidden />
-    <input type="radio" id="tab4" name="tabs" class="tab-locator" hidden />
-    <ul class="tab tab-block">
-        <li class="tab-item">
-            <label for="tab1"><a>Profil</a></label>
-        </li>
-        <li class="tab-item">
-            <label for="tab2"><a>Godziny</a></label>
-        </li>
-        <li class="tab-item">
-            <label for="tab3"><a>Finanse</a></label>
-        </li>
-        <li class="tab-item">
-            <label for="tab4"><a>Grafik</a></label>
-        </li>
-    </ul>
-    <div class="tabs"> 
-        <div class="tab-content">
-            <div class="tile bg-gray p-2" style="margin-top: 25px;">
-                <div class="tile-icon">
-                    <figure class="avatar avatar-size">
-                        <img class="icon icon-file" src="{{ user.profile.image.url }}" />
-                    </figure>
-                    <p style="margin-top: 15px; text-align: center;">
-                        <a href="/articles/login_button/{{ user.id }}">
-                            {% if not login_status %}
-                            <button class="btn btn-lg">Log in</button>
-                            {% endif %}
-                        </a>
-                        <a href="/articles/logout_button/{{ user.id }}">
-                            {% if login_status %}
-                            <button class="btn btn-lg">Log out</button>
-                            {% endif %}
-                        </a>
-                    </p>
-                </div>
-                <div class="tile-content">
-                    <p class="tile-title"><b>{{ user.username }}</b></p>
-                    <p class="tile-subtitle">{{ user.email }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="tab-content">
-            <div style="margin-top: 15px;">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Dzień</th>
-                            <th style="text-align: right;">Start</th>
-                            <th style="text-align: right;">Koniec</th>
-                            <th style="text-align: right;">Ilość godzin</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for day in user.hoursworked_set.all %}
-                        <tr>
-                            <th class="table-font">{{ day.day }}</th>
-                            <th class="table-font" style="text-align: right;">{{day.start|time:"H:i"}}</th>
-                            <th class="table-font" style="text-align: right;">{{day.finish|time:"H:i"}}</th>
-                            <th class="table-font" style="text-align: right;">{{ day.duration}}</th>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="tab-content">
-            Wypłata = 
-        </div>
-        <div class="tab-content">
-            trąbka
-        </div>
-
+<div class="tile bg-gray p-2" style="margin-top: 25px;">
+    <div class="tile-icon">
+        <figure class="avatar avatar-size">
+            <img class="icon icon-file" src="{{ user.profile.image.url }}" />
+        </figure>
+        <p style="margin-top: 15px; text-align: center;">
+            <a href="/articles/login_button/{{ user.id }}">
+                {% if not login_status %}
+                <button class="btn btn-lg">Log in</button>
+                {% endif %}
+            </a>
+            <a href="/articles/logout_button/{{ user.id }}">
+                {% if login_status %}
+                <button class="btn btn-lg">Log out</button>
+                {% endif %}
+            </a>
+        </p>
+    </div>
+    <div class="tile-content">
+        <p class="tile-title"><b>{{ user.username }}</b></p>
+        <p class="tile-subtitle">{{ user.email }}</p>
     </div>
 </div>
 {% endblock %}
