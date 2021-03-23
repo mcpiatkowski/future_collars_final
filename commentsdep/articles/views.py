@@ -10,10 +10,6 @@ from django.contrib import messages
 from .forms import CommentForm, CreateUserForm, ArticleCreateForm
 from datetime import datetime, date
 
-""" class ArticleListView(ListView):
-    template_name = 'articles/article_list.html'
-    queryset = Article.objects.all()
- """
 
 @login_required(login_url='/articles/login')
 def article_view(request):
