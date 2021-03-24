@@ -52,6 +52,10 @@ class HoursWorked(models.Model):
     class Meta:
         ordering = ['-day', '-start']
 
+    
+    def clean(self):
+        print("USER: ", self.user)
+
 
     def get_absolute_url(self):
         return f"my_site/{self.id}"
@@ -81,3 +85,10 @@ class Profile(models.Model):
 
     def payout(self):
         total_hours = self.user.hoursworked_set.all()
+
+
+class Blacklist(models.Model):
+    word = models.CharField('word', max_length=16)
+
+    def __str__(self):
+        return self.word

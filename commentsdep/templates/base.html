@@ -119,7 +119,9 @@
                     <div class="container main-content">
                         {% if messages %}
                             {% for message in messages %}
-                                {{ message }}
+                                <div class="container text-center mt-1 label label-{{ message.tags }}  text-large">
+                                    <span class="">{{ message }}</span>
+                                </div>
                             {% endfor %}
                         {% endif %}
                         {% block content %} {% endblock %}

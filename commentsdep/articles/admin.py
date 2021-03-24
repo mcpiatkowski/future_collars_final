@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Article, Comment, HoursWorked, Profile
+from .models import Article, Comment, HoursWorked, Profile, Blacklist
 # Register your models here.
 
 class ArticleAdmin(admin.ModelAdmin):
@@ -30,3 +30,4 @@ admin.site.register(Article, ArticleAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(HoursWorked, HoursWorkedAdmin)
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Blacklist)

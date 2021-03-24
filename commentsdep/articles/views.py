@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic.list import ListView
 from django.views.generic import CreateView
-from .models import Article, HoursWorked, Profile
+from .models import Article, HoursWorked, Profile, Blacklist
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -29,21 +29,18 @@ class ArticleCreateView(CreateView):
 
 @login_required(login_url='/articles/login')
 def article_detail(request, article_id):
-    blacklist = [
-        'kurczaki',
-        'motyla noga',
-        'kurtka na wacie',
-        'wirus',
-    ]
-
     article = Article.objects.get(pk=article_id)
+    blacklist = Blacklist.objects.all()
     form = CommentForm()
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             for word in form.cleaned_data['comment'].split(' '):
-                if word in blacklist:
-                    return redirect('articles:article-detail', article_id=article_id)
+                for bad_word in blacklist:
+                    if word.lower() == bad_word.word:
+                        messages.warning(request, f'Komentarz przekazany do moderacji.')
+                        messages.error(request, f'Proszę się wyrażać!')
+                        return redirect('articles:article-detail', article_id=article_id)
             messages.success(request, f'Dodano komentarz')
             article.comment_set.create(user=request.user, content=form.cleaned_data['comment'])
             form = CommentForm()
@@ -76,6 +73,10 @@ def hours_view(request, user_id):
 @login_required(login_url='/articles/login')
 def finance_view(request, user_id):
     user = User.objects.get(pk=user_id)
+    blacklist = Blacklist.objects.all()
+    print("BLACKLIST: ", blacklist)
+    for word in blacklist:
+        print("WORD: ", word)
     context ={
         'user': user,
     }
@@ -103,12 +104,7 @@ def login_button(request, user_id):
         user.hoursworked_set.create(
             start=timezone.now(),
             )
-    context ={
-        'user': user,
-        'login_status': login_status,
-    }
-    return render(request, 'articles/my_site.html', context)
-#    return redirect("articles:my-site", user_id=user_id)
+    return redirect("articles:my-site", user_id=user_id)
 
 
 @login_required(login_url='/articles/login')
