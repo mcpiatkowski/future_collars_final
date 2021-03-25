@@ -2,9 +2,11 @@
 
 {% block content %}
 <h2>Forum</h2>
+
+{{ myFilter }}
 <header class="navbar" style="margin-bottom: 2em;">
   <section class="navbar-section">
-    <a href="/articles/article_create/{{ user.id }}" style="text-decoration: none;">
+    <a href="{% url 'articles:article-create' %}" style="text-decoration: none;">
       <div class="tile tile-centered">
         <div class="tile-icon">
           <i class="icon icon-plus centered"></i>
@@ -23,7 +25,7 @@
   </section>
 </header>
 {% for article in object_list %}
-<a href="{{ article.get_absolute_url }}" style="text-decoration: none;">
+<a href="{% url 'articles:article-detail' article.id %}" style="text-decoration: none;">
 <div class="tile forum-tile" id="tile_">
   <div class="tile-icon">
     <div class="example-tile-icon">
