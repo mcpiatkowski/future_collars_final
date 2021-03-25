@@ -44,7 +44,7 @@
                 display:block;
             }
 
-            @media (min-width: 600px){
+            @media (min-width: 760px){
                 .off-canvas.off-canvas-sidebar-show .off-canvas-sidebar {
                     -ms-flex: 0 0 auto;
                     flex: 0 0 auto;
@@ -63,9 +63,12 @@
             </a>
             <div id="sidebar-id" class="off-canvas-sidebar navbar-body">
                 <div class="navbar-header">
-                    <h1>sidebar</h1>
+                    <h1>Tortura</h1>
+                    <figure class="avatar avatar-size">
+                        <img class="icon icon-file" src="{{ user.profile.image.url }}" />
+                    </figure>
                 </div>
-                <div class="navbar-menu">
+                <div class="navbar-menu mt-2">
                     <ul class="nav">
                         <li class="nav-item">
                             <a href="/articles/my_site/{{ user.id }}">
@@ -106,7 +109,7 @@
             <div class="off-canvas-content">
                 <header>
                     <div class="top">
-                        <span>Hello, {{ request.user }}</span>
+                        <span>Siema, {{ request.user }}</span>
                         <span style="margin-left: 5px">
                             <a href="/articles/logout"> logout </a>
                         </span>
@@ -115,8 +118,8 @@
                         <span></span>
                     </div>
                 </header>
-                <div class="off-canvas content-overflow">
-                    <div class="container main-content">
+                <div class="off-canvas content-overflow" style="margin-top: 20px;">
+                    <div class="container col-10 col-md-12" style="margin-left: 5px;">
                         {% if messages %}
                             {% for message in messages %}
                                 <div class="container text-center mt-1 label label-{{ message.tags }}  text-large">
@@ -125,6 +128,9 @@
                             {% endfor %}
                         {% endif %}
                         {% block content %} {% endblock %}
+                    </div>
+                    <div class="col-2">
+
                     </div>
                 </div>
             </div>

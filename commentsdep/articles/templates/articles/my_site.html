@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h2>Moja strona</h2>
 <div class="container bg-gray p-2">
     <div class="columns">
-        <div class="column col-3 col-xl-6 col-md-12">
+        <div class="column col-4 col-xl-12">
             <p style="margin-top: 15px; text-align: center;">
                 <a href="/articles/login_button/{{ user.id }}">
                     {% if not login_status %}
@@ -17,12 +18,7 @@
                 </a>
             </p>
         </div>
-        <div class="column col-2 col-xl-6 col-md-12 text-center">
-            <figure class="avatar avatar-size" style="margin-top: .6rem;">
-                <img class="icon icon-file" src="{{ user.profile.image.url }}" />
-            </figure>
-        </div>
-        <div class="column col-7 col-xl-12">
+        <div class="column col-8 col-xl-12">
             <p class="tile-title" style="margin-top: 1rem;"><b>{{ user.username }}</b></p>
             <p class="tile-subtitle">{{ user.email }}</p>
         </div>

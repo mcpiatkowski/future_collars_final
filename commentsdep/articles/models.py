@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from math import floor
+import decimal
 
 PUBLICATION_STATUSES = (
     ('pending', 'Oczekuje'),
@@ -43,11 +44,21 @@ class Comment(models.Model):
         return self.content
 
 
+class HoursWorkedManager(models.Manager):
+
+    def total_salary(self, obj):
+        obj.salary = obj.get_duration * obj.user.profile.rate
+        obj.save()
+
+
 class HoursWorked(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     day = models.DateField(auto_now_add=True)
     start = models.DateTimeField()
     finish = models.DateTimeField(null=True)
+    salary = models.DecimalField(max_digits=4, decimal_places=2, null=True, default=0)
+    objects = HoursWorkedManager
+
 
     class Meta:
         ordering = ['-day', '-start']
@@ -69,22 +80,30 @@ class HoursWorked(models.Model):
             #counted_seconds = floor(counted)
             minutes = floor(counted_seconds/60)
             hours = floor(minutes/3600)
-            return "{}:{}:{}".format(hours, minutes, seconds)
+            return "{}h {} m".format(hours, minutes)
         return 'ciężką pracą ludzie się bogacą'
+
+    
+    def get_duration(self):
+        if self.finish:
+            total_time = (self.finish - self.start).total_seconds()
+            print("GET DURATION: ", total_time)
+            print("GET DURATION TYPE: ", type(total_time))
+            total_time = total_time/3600
+            #total_time = floor(total_time *100)/100
+            print("GET DURATION AFTER FLOOR: ", total_time)
+            return decimal.Decimal(total_time)
+        return 0
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    rate = models.FloatField(null=True)
+    rate = models.DecimalField(max_digits=4, decimal_places=2, null=True)
     logged = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.username} Profile'
-
-
-    def payout(self):
-        total_hours = self.user.hoursworked_set.all()
 
 
 class Blacklist(models.Model):

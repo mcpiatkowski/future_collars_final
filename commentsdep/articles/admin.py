@@ -17,8 +17,9 @@ class HoursWorkedAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['user']}),
         ('Start & Finish', {'fields': ['start', 'finish']}),
+        ('Salary', {'fields': ['salary']}),
     ]
-    list_display = ('user', 'day')
+    list_display = ('user', 'day', 'salary')
     list_filter = ['user']
 
 

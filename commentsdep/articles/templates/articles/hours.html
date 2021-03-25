@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<h2>Godziny</h2>
 <div style="margin-top: 15px;">
     <table class="table table-hover">
         <thead>
@@ -10,6 +10,7 @@
                 <th style="text-align: right;">Start</th>
                 <th style="text-align: right;">Koniec</th>
                 <th style="text-align: right;">Ilość godzin</th>
+                <th style="text-align: right;">Pieniążki</th>
             </tr>
         </thead>
         <tbody>
@@ -19,6 +20,13 @@
                 <th class="table-font" style="text-align: right;">{{day.start|time:"H:i"}}</th>
                 <th class="table-font" style="text-align: right;">{{day.finish|time:"H:i"}}</th>
                 <th class="table-font" style="text-align: right;">{{ day.duration}}</th>
+                <th class="table-font" style="text-align: right;">
+                    {% if day.salary %}    
+                    {{ day.salary}} PLN
+                    {% else %}
+                    Ka-ching!
+                    {% endif %}  
+                </th>
             </tr>
             {% endfor %}
         </tbody>

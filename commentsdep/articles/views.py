@@ -9,13 +9,20 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CommentForm, CreateUserForm, ArticleCreateForm
 from datetime import datetime, date
+from .filters import ArticleFilter
+import decimal
 
 
 @login_required(login_url='/articles/login')
 def article_view(request):
     queryset = Article.objects.all()
+
+    myFilter = ArticleFilter(request.GET, queryset=queryset)
+    queryset = myFilter.qs
+
     context ={
         'object_list': queryset,
+        'myFilter': myFilter,
     }
     return render(request, 'articles/article_list.html', context)
 
@@ -73,12 +80,18 @@ def hours_view(request, user_id):
 @login_required(login_url='/articles/login')
 def finance_view(request, user_id):
     user = User.objects.get(pk=user_id)
-    blacklist = Blacklist.objects.all()
-    print("BLACKLIST: ", blacklist)
-    for word in blacklist:
-        print("WORD: ", word)
+    current_month = timezone.now().month
+    month = user.hoursworked_set.filter(day__month = current_month)
+    current_month = timezone.now().strftime('%B').lower()
+    payment = 0
+    payment = decimal.Decimal(payment)
+    for day in month:
+        if day.salary:
+            payment += day.salary
     context ={
         'user': user,
+        'payment': payment,
+        'month': current_month,
     }
     return render(request, 'articles/finance.html', context)
 
@@ -116,6 +129,7 @@ def logout_button(request, user_id):
             user.profile.save()
             hours = user.hoursworked_set.latest('start')
             hours.finish = timezone.now()
+            hours.salary = hours.get_duration() * user.profile.rate
             hours.save()
     return redirect("articles:my-site", user_id=user_id)
 
