@@ -37,12 +37,15 @@ class Comment(models.Model):
     status = models.CharField(
         max_length=8, 
         choices=PUBLICATION_STATUSES, 
-        default='pending',
+        default='accepted',
         #editable=False,
         )
     
     def __str__(self):
         return self.content
+
+    def get_absolute_url(self):
+        return reverse('articles:article-detail', args=[self.article.pk])
 
 
 class HoursWorkedManager(models.Manager):

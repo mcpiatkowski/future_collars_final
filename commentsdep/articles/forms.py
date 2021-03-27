@@ -21,12 +21,20 @@ class ArticleCreateForm(forms.ModelForm):
         }
 
 
-class CommentAddForm(forms.ModelForm):
+class CommentCreateForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = [
             'content',
-        ]
+            ]
+
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-input',
+                'rows': 10,
+                'novalidate': 'True'
+                })
+            }
 
 
 class CommentForm(forms.Form):

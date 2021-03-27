@@ -5,12 +5,12 @@ from django.utils import timezone
 from django.views.generic.list import ListView
 from django.views.generic import CreateView
 from django.views.generic.detail import DetailView
-from .models import Article, HoursWorked, Profile, Blacklist
+from .models import Article, HoursWorked, Profile, Blacklist, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CommentForm, CreateUserForm, ArticleCreateForm
+from .forms import CommentForm, CommentCreateForm, CreateUserForm, ArticleCreateForm
 from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
@@ -67,8 +67,17 @@ class ArticleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = CommentForm()
+        context['form'] = CommentCreateForm()
         return context
+
+
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentCreateForm
+
+    def form_valid(self, form):
+        form.instance.article_id = self.kwargs['pk']
+        return super().form_valid(form)
 
 
 #@login_required(login_url='/articles/login')

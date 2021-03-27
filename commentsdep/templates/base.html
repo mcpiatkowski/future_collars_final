@@ -71,25 +71,25 @@
                 <div class="navbar-menu mt-2">
                     <ul class="nav">
                         <li class="nav-item">
-                            <a href="/articles/my_site/{{ user.id }}">
+                            <a href="{% url 'articles:my-site' user.id %}">
                                 <i class="icon icon-people"></i>
                                 Moja strona
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/articles/hours/{{ user.id }}">
+                            <a href="{% url 'articles:hours' user.id %}">
                                 <i class="icon icon-time"></i>
                                 Godziny
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/articles/finance/{{ user.id }}">
+                            <a href="{% url 'articles:finance' user.id %}">
                                 <i class="icon icon-link"></i>
                                 Finanse
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/articles/schedule/{{ user.id }}">
+                            <a href="{% url 'articles:schedule' user.id %}">
                                 <i class="icon icon-edit"></i>
                                 Grafik
                             </a>
