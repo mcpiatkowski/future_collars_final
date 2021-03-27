@@ -28,13 +28,13 @@ class CommentCreateForm(forms.ModelForm):
             'content',
             ]
 
-        widgets = {
-            'content': forms.Textarea(attrs={
-                'class': 'form-input',
-                'rows': 10,
-                'novalidate': 'True'
-                })
-            }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs.update({
+            'class': 'form-input',
+            'rows': 5,
+            })
+        self.fields['content'].required=False
 
 
 class CommentForm(forms.Form):

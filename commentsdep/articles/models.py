@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from math import floor
 import decimal
 
+
 PUBLICATION_STATUSES = (
     ('pending', 'Oczekuje'),
     ('accepted', 'Zaakceptowano'),
@@ -51,7 +52,7 @@ class Comment(models.Model):
 class HoursWorkedManager(models.Manager):
 
     def total_salary(self, obj):
-        obj.salary = obj.get_duration * obj.user.profile.rate
+        obj.salary = floor(obj.get_duration() * obj.user.profile.rate*100)/100
         obj.save()
 
 
@@ -60,16 +61,12 @@ class HoursWorked(models.Model):
     day = models.DateField(auto_now_add=True)
     start = models.DateTimeField()
     finish = models.DateTimeField(null=True)
-    salary = models.DecimalField(max_digits=4, decimal_places=2, null=True, default=0)
-    objects = HoursWorkedManager
+    salary = models.FloatField(null=True, default=0.0)
+    objects = HoursWorkedManager()
 
 
     class Meta:
         ordering = ['-day', '-start']
-
-    
-    def clean(self):
-        print("USER: ", self.user)
 
 
     def get_absolute_url(self):
@@ -91,19 +88,15 @@ class HoursWorked(models.Model):
     def get_duration(self):
         if self.finish:
             total_time = (self.finish - self.start).total_seconds()
-            print("GET DURATION: ", total_time)
-            print("GET DURATION TYPE: ", type(total_time))
-            total_time = total_time/3600
-            #total_time = floor(total_time *100)/100
-            print("GET DURATION AFTER FLOOR: ", total_time)
-            return decimal.Decimal(total_time)
+            total_time = floor((total_time/3600)*100)/100
+            return total_time
         return 0
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    rate = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    rate = models.FloatField(null=True)
     logged = models.BooleanField(default=False)
 
     def __str__(self):

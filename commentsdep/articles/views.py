@@ -14,6 +14,7 @@ from .forms import CommentForm, CommentCreateForm, CreateUserForm, ArticleCreate
 from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
+from math import floor
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -28,14 +29,12 @@ def register_view(request):
         if request.method == "POST":
             form = CreateUserForm(request.POST)
             if form.is_valid():
-                print("TU JESTEM")
                 form.save()
                 email = form.cleaned_data['email']
                 user = User.objects.filter(email=email).first()
                 user.is_active = False
                 user.save()
                 Profile.objects.create(user=user)
-                print("BANG!")
             return redirect('/articles/login')
         context = {
             'form': form,
@@ -77,6 +76,7 @@ class CommentCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.article_id = self.kwargs['pk']
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
 
@@ -104,6 +104,20 @@ class CommentCreateView(CreateView):
 #    return render(request, 'articles/article_detail.html', context)
 
 
+class HoursListView(LoginRequiredMixin, ListView):
+    template_name = 'articles/hours.html'
+
+    def get_queryset(self):
+        return User.objects.get(pk=self.kwargs['user_id'])
+
+
+class ScheduleListView(LoginRequiredMixin, ListView):
+    template_name = 'articles/schedule.html'
+
+    def get_queryset(self):
+        return User.objects.get(pk=self.kwargs['user_id'])
+
+
 @login_required(login_url='/articles/login')
 def my_site_view(request, user_id):
     user = User.objects.get(pk=user_id)
@@ -115,40 +129,21 @@ def my_site_view(request, user_id):
 
 
 @login_required(login_url='/articles/login')
-def hours_view(request, user_id):
-    user = User.objects.get(pk=user_id)
-    context ={
-        'user': user,
-    }
-    return render(request, 'articles/hours.html', context)
-
-
-@login_required(login_url='/articles/login')
 def finance_view(request, user_id):
     user = User.objects.get(pk=user_id)
     current_month = timezone.now().month
     month = user.hoursworked_set.filter(day__month = current_month)
     current_month = timezone.now().strftime('%B').lower()
-    payment = 0
-    payment = decimal.Decimal(payment)
+    payment = 0.0
     for day in month:
         if day.salary:
             payment += day.salary
     context ={
         'user': user,
-        'payment': payment,
+        'payment': floor(payment*100)/100,
         'month': current_month,
     }
     return render(request, 'articles/finance.html', context)
-
-
-@login_required(login_url='/articles/login')
-def schedule_view(request, user_id):
-    user = User.objects.get(pk=user_id)
-    context ={
-        'user': user,
-    }
-    return render(request, 'articles/schedule.html', context)
 
 
 @login_required(login_url='/articles/login')
@@ -175,6 +170,7 @@ def logout_button(request, user_id):
             user.profile.save()
             hours = user.hoursworked_set.latest('start')
             hours.finish = timezone.now()
-            hours.salary = hours.get_duration() * user.profile.rate
+            salary = apps.get_model('articles.HoursWorked').objects.total_salary(hours)
+            #hours.salary = hours.get_duration() * user.profile.rate
             hours.save()
     return redirect("articles:my-site", user_id=user_id)
