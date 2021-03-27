@@ -32,7 +32,7 @@
     {% endfor %}
 
     <br>
-    <form method="post">
+    <form method="post" action="{% url 'articles:comment-create' article.pk %}">
         {% csrf_token %}
         <div class="form-group">
             {{ form.as_p }}
@@ -40,4 +40,5 @@
         <input class='btn' type="submit" value="Submit">
     </form>
 </div>
+
 {% endblock %}

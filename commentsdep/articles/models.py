@@ -9,8 +9,10 @@ PUBLICATION_STATUSES = (
     ('accepted', 'Zaakceptowano'),
     ('rejected', 'Odrzucono'),
     )
-# Create your models here.
+
+
 class Article(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=256, verbose_name='Title')
     content = models.TextField(verbose_name='Content')
     snippet = models.CharField(max_length=120, verbose_name='Snippet')
@@ -23,8 +25,7 @@ class Article(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        #return reverse('articles:article-detail', kwargs={'id': self.id})
-        return f"{self.id}/"
+        return reverse('articles:article-detail', args=[self.id])
     
 
 class Comment(models.Model):
@@ -36,12 +37,15 @@ class Comment(models.Model):
     status = models.CharField(
         max_length=8, 
         choices=PUBLICATION_STATUSES, 
-        default='pending',
+        default='accepted',
         #editable=False,
         )
     
     def __str__(self):
         return self.content
+
+    def get_absolute_url(self):
+        return reverse('articles:article-detail', args=[self.article.pk])
 
 
 class HoursWorkedManager(models.Manager):

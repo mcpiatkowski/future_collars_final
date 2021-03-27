@@ -6,12 +6,12 @@
     <div class="columns">
         <div class="column col-4 col-xl-12">
             <p style="margin-top: 15px; text-align: center;">
-                <a href="/articles/login_button/{{ user.id }}">
+                <a href="{% url 'articles:login-button' user.id %}">
                     {% if not login_status %}
                     <button class="btn ml-2" style="width: 10rem; height: 4rem;">Log in</button>
                     {% endif %}
                 </a>
-                <a href="/articles/logout_button/{{ user.id }}">
+                <a href="{% url 'articles:logout-button' user.id %}">
                     {% if login_status %}
                     <button class="btn" style="width: 10rem; height: 4rem;">Log out</button>
                     {% endif %}

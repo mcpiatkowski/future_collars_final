@@ -1,61 +1,107 @@
+from django.apps import apps
+
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic.list import ListView
 from django.views.generic import CreateView
-from .models import Article, HoursWorked, Profile, Blacklist
+from django.views.generic.detail import DetailView
+from .models import Article, HoursWorked, Profile, Blacklist, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CommentForm, CreateUserForm, ArticleCreateForm
+from .forms import CommentForm, CommentCreateForm, CreateUserForm, ArticleCreateForm
 from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
 
-
-@login_required(login_url='/articles/login')
-def article_view(request):
-    queryset = Article.objects.all()
-
-    myFilter = ArticleFilter(request.GET, queryset=queryset)
-    queryset = myFilter.qs
-
-    context ={
-        'object_list': queryset,
-        'myFilter': myFilter,
-    }
-    return render(request, 'articles/article_list.html', context)
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class ArticleCreateView(CreateView):
+### LOGIN AND REGISTRATION ############
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('/articles')
+    else:
+        form = CreateUserForm()
+        if request.method == "POST":
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                print("TU JESTEM")
+                form.save()
+                email = form.cleaned_data['email']
+                user = User.objects.filter(email=email).first()
+                user.is_active = False
+                user.save()
+                Profile.objects.create(user=user)
+                print("BANG!")
+            return redirect('/articles/login')
+        context = {
+            'form': form,
+        }
+        return render(request, 'articles/register.html', context)
+
+
+class ArticleListView(LoginRequiredMixin, ListView):
+
+    def get_queryset(self):
+        queryset = apps.get_model('articles.Article').objects.all()
+        myFilter = ArticleFilter(self.request.GET, queryset=queryset)
+        return myFilter.qs
+
+
+class ArticleCreateView(LoginRequiredMixin, CreateView):
     template_name = 'articles/article_create.html'
     form_class = ArticleCreateForm
     queryset = Article.objects.all()
-    success_url = '/articles'
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
-@login_required(login_url='/articles/login')
-def article_detail(request, article_id):
-    article = Article.objects.get(pk=article_id)
-    blacklist = Blacklist.objects.all()
-    form = CommentForm()
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            for word in form.cleaned_data['comment'].split(' '):
-                for bad_word in blacklist:
-                    if word.lower() == bad_word.word:
-                        messages.warning(request, f'Komentarz przekazany do moderacji.')
-                        messages.error(request, f'Proszę się wyrażać!')
-                        return redirect('articles:article-detail', article_id=article_id)
-            messages.success(request, f'Dodano komentarz')
-            article.comment_set.create(user=request.user, content=form.cleaned_data['comment'])
-            form = CommentForm()
-    context = {
-        'article': article,
-        'form': form,
-    }
-    return render(request, 'articles/article_detail.html', context)
+class ArticleDetailView(DetailView):
+    model = apps.get_model('articles.Article')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentCreateForm()
+        return context
+
+
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentCreateForm
+
+    def form_valid(self, form):
+        form.instance.article_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+
+#@login_required(login_url='/articles/login')
+#def article_detail(request, article_id):
+#    article = Article.objects.get(pk=article_id)
+#    blacklist = Blacklist.objects.all()
+#    form = CommentForm()
+#    if request.method == 'POST':
+#        form = CommentForm(request.POST)
+#        if form.is_valid():
+#            for word in form.cleaned_data['comment'].split(' '):
+#                for bad_word in blacklist:
+#                    if word.lower() == bad_word.word:
+#                        messages.warning(request, f'Komentarz przekazany do moderacji.')
+#                        messages.error(request, f'Proszę się wyrażać!')
+#                        return redirect('articles:article-detail', article_id=article_id)
+#            messages.success(request, f'Dodano komentarz')
+#            article.comment_set.create(user=request.user, content=form.cleaned_data['comment'])
+#            form = CommentForm()
+#    context = {
+#        'article': article,
+#        'form': form,
+#    }
+#    return render(request, 'articles/article_detail.html', context)
 
 
 @login_required(login_url='/articles/login')
@@ -132,48 +178,3 @@ def logout_button(request, user_id):
             hours.salary = hours.get_duration() * user.profile.rate
             hours.save()
     return redirect("articles:my-site", user_id=user_id)
-
-
-def register_view(request):
-    if request.user.is_authenticated:
-        return redirect('/articles')
-    else:
-        form = CreateUserForm()
-        if request.method == "POST":
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                print("TU JESTEM")
-                form.save()
-                email = form.cleaned_data['email']
-                user = User.objects.filter(email=email).first()
-                user.is_active = False
-                user.save()
-                Profile.objects.create(user=user)
-                print("BANG!")
-            return redirect('/articles/login')
-        context = {
-            'form': form,
-        }
-        return render(request, 'articles/register.html', context)
-
-
-def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('/articles')
-    else:
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('/articles')
-            else:
-                messages.info(request, 'Username OR password is incorrect')
-        context = {}
-        return render(request, 'articles/login.html', context)
-
-
-def logout_user_view(request):
-    logout(request)
-    return redirect('/articles/login')
