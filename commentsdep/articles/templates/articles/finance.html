@@ -2,8 +2,8 @@
 
 {% block content %}
 <h2>Finanse</h2>
-<p>Przepracowałeś/aś godzin w tym miesiącu. </p>
-<p>Twoja wypłata za miesiąc {{ month }}: {{ payment }} PLN </p>
+<p>Przepracowałeś/aś {{ payslip.month_hours }} godzin w tym miesiącu. </p>
+<p>Twoja wypłata za miesiąc {{ payslip.month }}: {{ payslip.month_salary }} PLN </p>
 <p>Twoja stawka: {{ user.profile.rate }} </p>
 <h4>Czarna lista</h4>
 {% endblock %}

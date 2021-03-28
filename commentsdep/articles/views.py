@@ -123,17 +123,10 @@ def my_site_view(request, user_id):
 @login_required(login_url='/articles/login')
 def finance_view(request, user_id):
     user = User.objects.get(pk=user_id)
-    current_month = timezone.now().month
-    month = user.hoursworked_set.filter(day__month = current_month)
-    current_month = datetime.now().strftime('%B').lower()
-    payment = 0.0
-    for day in month:
-        if day.salary:
-            payment += day.salary
+    payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
     context ={
         'user': user,
-        'payment': floor(payment*100)/100,
-        'month': current_month,
+        'payslip': payslip,
     }
     return render(request, 'articles/finance.html', context)
 
@@ -163,6 +156,6 @@ def logout_button(request, user_id):
             hours = user.hoursworked_set.latest('start')
             hours.finish = timezone.now()
             salary = apps.get_model('articles.HoursWorked').objects.total_salary(hours)
-            #Payslip.objects.update(hours)
+            apps.get_model('articles.Payslip').objects.update(hours)
             hours.save()
     return redirect("articles:my-site", user_id=user_id)

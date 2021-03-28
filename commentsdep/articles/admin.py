@@ -1,6 +1,13 @@
 from django.contrib import admin
-from .models import Article, Comment, HoursWorked, Profile, Blacklist
-# Register your models here.
+from .models import (
+    Article, 
+    Comment, 
+    HoursWorked, 
+    Profile, 
+    Blacklist, 
+    Payslip,
+    )
+
 
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']
@@ -32,3 +39,4 @@ admin.site.register(Comment, CommentAdmin)
 admin.site.register(HoursWorked, HoursWorkedAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Blacklist)
+admin.site.register(Payslip)

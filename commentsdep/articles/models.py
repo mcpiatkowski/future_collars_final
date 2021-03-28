@@ -118,8 +118,29 @@ class Blacklist(models.Model):
         return self.word
 
 
+class PayslipManager(models.Manager):
+    
+    def update(self, obj):
+        payslip = Payslip.objects.all().last()
+        if payslip and payslip.month == obj.day.month:
+            payslip.month_hours += obj.get_duration()
+            payslip.month_salary = obj.salary
+            payslip.save()
+        else:
+            Payslip.objects.create(
+                user=obj.user, 
+                month=obj.day.month, 
+                month_hours= obj.get_duration(),
+                month_salary=obj.salary
+                )
+
+
 class Payslip(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    month = models.DateTimeField()
+    month = models.IntegerField()
     month_hours = models.FloatField()
     month_salary = models.FloatField(null=True)
+    objects = PayslipManager()
+
+    class Meta:
+        ordering = ['-month']
