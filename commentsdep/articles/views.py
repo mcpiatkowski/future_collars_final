@@ -124,6 +124,12 @@ def my_site_view(request, user_id):
 def finance_view(request, user_id):
     user = User.objects.get(pk=user_id)
     payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
+
+    obj = user.hoursworked_set.latest('start')
+    print("OBJ: ", obj)
+    obj_duration = obj.duration()
+    print("OBJ DURATIONN: ", obj_duration)
+
     context ={
         'user': user,
         'payslip': payslip,

@@ -75,10 +75,7 @@ class HoursWorked(models.Model):
     #@property
     def duration(self):
         if self.finish:
-            counted_seconds = (self.finish - self.start).total_seconds()
-            minutes = floor(counted_seconds/60)
-            hours = floor(counted_seconds/3600)
-            return "{}h {} m".format(hours, minutes)
+            return str(self.finish - self.start).split('.')[0]
         return 'ciężką pracą ludzie się bogacą'
 
     
@@ -124,7 +121,7 @@ class PayslipManager(models.Manager):
         payslip = Payslip.objects.all().last()
         if payslip and payslip.month == obj.day.month:
             payslip.month_hours += obj.get_duration()
-            payslip.month_salary = obj.salary
+            payslip.month_salary += obj.salary
             payslip.save()
         else:
             Payslip.objects.create(
