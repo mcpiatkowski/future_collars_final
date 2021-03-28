@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from math import floor
-import decimal
 
 
 PUBLICATION_STATUSES = (
@@ -109,7 +108,6 @@ class BlacklistManager(models.Manager):
         for word in obj:
             for blacklist_obj in Blacklist.objects.all():
                 if word.lower().strip() == blacklist_obj.word:
-                    print("BRZYDKO!")
                     return True
         return False
 

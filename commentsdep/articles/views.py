@@ -15,6 +15,7 @@ from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
 from math import floor
+from django.http import HttpResponseRedirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -81,39 +82,16 @@ class CommentCreateView(CreateView):
         comment = form.cleaned_data.get('content').split(' ')
         if Blacklist.objects.validate_words(comment):
             messages.warning(self.request, 
-            f'Komentarz przekazany do moderacji.'
-            )
+                f'Komentarz przekazany do moderacji.'
+                )
             messages.error(self.request, 
-            f'Proszę się wyrażać!'
-            )
-            return redirect('articles:article-detail', article_id = str(form.instance.article_id))
+                f'Proszę się wyrażać!'
+                )
+            return HttpResponseRedirect(reverse(
+                'articles:article-detail', 
+                kwargs={'pk': self.kwargs['pk']}
+                )) 
         return super().form_valid(form)
-
-
-
-
-#@login_required(login_url='/articles/login')
-#def article_detail(request, article_id):
-#    article = Article.objects.get(pk=article_id)
-#    blacklist = Blacklist.objects.all()
-#    form = CommentForm()
-#    if request.method == 'POST':
-#        form = CommentForm(request.POST)
-#        if form.is_valid():
-#            for word in form.cleaned_data['comment'].split(' '):
-#                for bad_word in blacklist:
-#                    if word.lower() == bad_word.word:
-#                        messages.warning(request, f'Komentarz przekazany do moderacji.')
-#                        messages.error(request, f'Proszę się wyrażać!')
-#                        return redirect('articles:article-detail', article_id=article_id)
-#            messages.success(request, f'Dodano komentarz')
-#            article.comment_set.create(user=request.user, content=form.cleaned_data['comment'])
-#            form = CommentForm()
-#    context = {
-#        'article': article,
-#        'form': form,
-#    }
-#    return render(request, 'articles/article_detail.html', context)
 
 
 class HoursListView(LoginRequiredMixin, ListView):
