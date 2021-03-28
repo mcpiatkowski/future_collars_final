@@ -1,5 +1,5 @@
 from django.apps import apps
-
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic.list import ListView
@@ -76,8 +76,20 @@ class CommentCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.article_id = self.kwargs['pk']
+        print("ARTICLE ID: ", form.instance.article_id)
         form.instance.user = self.request.user
+        comment = form.cleaned_data.get('content').split(' ')
+        if Blacklist.objects.validate_words(comment):
+            messages.warning(self.request, 
+            f'Komentarz przekazany do moderacji.'
+            )
+            messages.error(self.request, 
+            f'Proszę się wyrażać!'
+            )
+            return redirect('articles:article-detail', article_id = str(form.instance.article_id))
         return super().form_valid(form)
+
+
 
 
 #@login_required(login_url='/articles/login')

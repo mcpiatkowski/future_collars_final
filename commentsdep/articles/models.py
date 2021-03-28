@@ -103,8 +103,20 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
 
 
+class BlacklistManager(models.Manager):
+
+    def validate_words(self, obj):
+        for word in obj:
+            for blacklist_obj in Blacklist.objects.all():
+                if word.lower().strip() == blacklist_obj.word:
+                    print("BRZYDKO!")
+                    return True
+        return False
+
+
 class Blacklist(models.Model):
     word = models.CharField('word', max_length=16)
+    objects = BlacklistManager()
 
     def __str__(self):
         return self.word
