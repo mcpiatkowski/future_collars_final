@@ -119,18 +119,15 @@
                     </div>
                 </header>
                 <div class="off-canvas content-overflow" style="margin-top: 20px;">
-                    <div class="container col-10 col-md-12" style="margin-left: 5px;">
+                    <div class="container col-10 col-md-11" style="margin-left: 5px;">
                         {% if messages %}
                             {% for message in messages %}
-                                <div class="container text-center mt-1 label label-{{ message.tags }}  text-large">
+                                <div class="container text-center mt-1 label label-{{ message.tags }}  text-large m-2">
                                     <span class="">{{ message }}</span>
                                 </div>
                             {% endfor %}
                         {% endif %}
                         {% block content %} {% endblock %}
-                    </div>
-                    <div class="col-2">
-
                     </div>
                 </div>
             </div>

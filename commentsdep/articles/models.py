@@ -76,10 +76,8 @@ class HoursWorked(models.Model):
     def duration(self):
         if self.finish:
             counted_seconds = (self.finish - self.start).total_seconds()
-            seconds = floor(counted_seconds/100)
-            #counted_seconds = floor(counted)
             minutes = floor(counted_seconds/60)
-            hours = floor(minutes/3600)
+            hours = floor(counted_seconds/3600)
             return "{}h {} m".format(hours, minutes)
         return 'ciężką pracą ludzie się bogacą'
 
@@ -118,3 +116,10 @@ class Blacklist(models.Model):
 
     def __str__(self):
         return self.word
+
+
+class Payslip(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    month = models.DateTimeField()
+    month_hours = models.FloatField()
+    month_salary = models.FloatField(null=True)

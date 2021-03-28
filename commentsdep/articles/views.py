@@ -62,7 +62,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ArticleDetailView(DetailView):
+class ArticleDetailView(LoginRequiredMixin, DetailView):
     model = apps.get_model('articles.Article')
 
     def get_context_data(self, **kwargs):
@@ -71,13 +71,12 @@ class ArticleDetailView(DetailView):
         return context
 
 
-class CommentCreateView(CreateView):
+class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentCreateForm
 
     def form_valid(self, form):
         form.instance.article_id = self.kwargs['pk']
-        print("ARTICLE ID: ", form.instance.article_id)
         form.instance.user = self.request.user
         comment = form.cleaned_data.get('content').split(' ')
         if Blacklist.objects.validate_words(comment):
@@ -90,7 +89,10 @@ class CommentCreateView(CreateView):
             return HttpResponseRedirect(reverse(
                 'articles:article-detail', 
                 kwargs={'pk': self.kwargs['pk']}
-                )) 
+                ))
+        messages.success(self.request, 
+                f'Dodano post.'
+                ) 
         return super().form_valid(form)
 
 
@@ -123,7 +125,7 @@ def finance_view(request, user_id):
     user = User.objects.get(pk=user_id)
     current_month = timezone.now().month
     month = user.hoursworked_set.filter(day__month = current_month)
-    current_month = timezone.now().strftime('%B').lower()
+    current_month = datetime.now().strftime('%B').lower()
     payment = 0.0
     for day in month:
         if day.salary:
@@ -161,6 +163,6 @@ def logout_button(request, user_id):
             hours = user.hoursworked_set.latest('start')
             hours.finish = timezone.now()
             salary = apps.get_model('articles.HoursWorked').objects.total_salary(hours)
-            #hours.salary = hours.get_duration() * user.profile.rate
+            #Payslip.objects.update(hours)
             hours.save()
     return redirect("articles:my-site", user_id=user_id)

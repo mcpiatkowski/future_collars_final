@@ -22,6 +22,11 @@
       <input  class="form-input" type="text" name="title_search" id="id_title_search" placeholder="wyszukaj tytuł">
       <button class="btn btn-primary input-group-btn" type="submit">Search</button>
     </form>
+    <form class="px-2" method="GET">
+      <button class="btn" type="submit">Reset 
+        <i class="icon icon-delete"></i>
+       </button>
+   </form>
   </section>
 </header>
 {% for article in object_list %}
