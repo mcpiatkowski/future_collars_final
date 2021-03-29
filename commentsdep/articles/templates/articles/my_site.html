@@ -4,7 +4,7 @@
 <h2>Moja strona</h2>
 <div class="container bg-gray p-2">
     <div class="columns">
-        <div class="column col-4 col-xl-12">
+        <div class="column col-5 col-lg-12 mx-2">
             <p style="margin-top: 15px; text-align: center;">
                 <a href="{% url 'articles:login-button' user.id %}">
                     {% if not login_status %}
@@ -18,41 +18,21 @@
                 </a>
             </p>
         </div>
-        <div class="column col-8 col-xl-12">
+        <div class="column col-6 col-lg-12 col-ml-auto mt-2">
             <p class="tile-title" style="margin-top: 1rem;"><b>{{ user.username }}</b></p>
             <p class="tile-subtitle">{{ user.email }}</p>
+        </div>
+        <div class="column col-6 col-ml-auto mt-2">
+            <form method="POST" class="form-group" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input class="btn btn-primary" type="submit" name="Update">
+            </form>
         </div>
     </div>
 
 </div>
 
-
-
-
-
-<!-- <div class="tile bg-gray p-2" style="margin-top: 25px;">
-    <div class="tile-icon">
-        <figure class="avatar avatar-size">
-            <img class="icon icon-file" src="{{ user.profile.image.url }}" />
-        </figure>
-        <p style="margin-top: 15px; text-align: center;">
-            <a href="/articles/login_button/{{ user.id }}">
-                {% if not login_status %}
-                <button class="btn btn-lg">Log in</button>
-                {% endif %}
-            </a>
-            <a href="/articles/logout_button/{{ user.id }}">
-                {% if login_status %}
-                <button class="btn btn-lg">Log out</button>
-                {% endif %}
-            </a>
-        </p>
-    </div>
-    <div class="tile-content">
-        <p class="tile-title"><b>{{ user.username }}</b></p>
-        <p class="tile-subtitle">{{ user.email }}</p>
-    </div>
-</div> -->
 {% endblock %}
 
  

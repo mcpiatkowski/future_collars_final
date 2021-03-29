@@ -5,29 +5,35 @@
 
 {{ myFilter }}
 <header class="navbar" style="margin-bottom: 2em;">
-  <section class="navbar-section">
-    <a href="{% url 'articles:article-create' %}" style="text-decoration: none;">
-      <div class="tile tile-centered mx-2">
-        <div class="tile-icon">
-          <i class="icon icon-plus centered"></i>
-        </div>
-        <div class="tile-content">
-          <div class="tile-title pt-1">Dodaj post</div>
-        </div>
+  <div class="container">
+    <div class="columns">
+      <div class="column col-4 col-sm-12">
+        <section class="navbar-section mt-2">
+          <a href="{% url 'articles:article-create' %}" style="text-decoration: none;">
+            <div class="tile tile-centered mx-2">
+              <div class="tile-icon">
+                <i class="icon icon-plus centered"></i>
+              </div>
+              <div class="tile-content">
+                <div class="tile-title pt-1">Dodaj post</div>
+              </div>
+            </div>
+          </a>
+        </section>
       </div>
-    </a>
-  </section>
-  <section class="navbar-section">
-    <form class="input-group input-inline" method="GET">
-      <input  class="form-input" type="text" name="title_search" id="id_title_search" placeholder="wyszukaj tytuł">
-      <button class="btn btn-primary input-group-btn" type="submit">Search</button>
-    </form>
-    <form class="px-2" method="GET">
-      <button class="btn" type="submit">Reset 
-        <i class="icon icon-delete"></i>
-       </button>
-   </form>
-  </section>
+      <section class="navbar-section mt-2" style="margin-left: 10px;">
+        <form class="input-group input-inline" method="GET">
+          <input  class="form-input" type="text" name="title_search" id="id_title_search" placeholder="wyszukaj tytuł">
+          <button class="btn btn-primary input-group-btn" type="submit">Search</button>
+        </form>
+        <form class="px-2" method="GET">
+          <button class="btn" type="submit">Reset 
+            <i class="icon icon-delete"></i>
+          </button>
+      </form>
+      </section>
+    </div>
+  </div>
 </header>
 {% for article in object_list %}
 <a href="{% url 'articles:article-detail' article.id %}" style="text-decoration: none;">

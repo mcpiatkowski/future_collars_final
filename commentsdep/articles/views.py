@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CommentForm, CommentCreateForm, CreateUserForm, ArticleCreateForm
+from .forms import CommentForm, CommentCreateForm, CreateUserForm, ProfileUpdateForm, ArticleCreateForm
 from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
@@ -112,9 +112,17 @@ class ScheduleListView(LoginRequiredMixin, ListView):
 
 @login_required(login_url='/articles/login')
 def my_site_view(request, user_id):
-    user = User.objects.get(pk=user_id)
+    user = request.user
+    profile = request.user.profile
+    form = ProfileUpdateForm(instance=profile)
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            print("ELO!")
+            form.save()
     context ={
         'user': user,
+        'form': form,
         'login_status': user.profile.logged,
     }
     return render(request, 'articles/my_site.html', context)
