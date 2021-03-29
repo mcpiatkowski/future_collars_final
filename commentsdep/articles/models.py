@@ -45,7 +45,7 @@ class Comment(models.Model):
         return self.content
 
     def get_absolute_url(self):
-        return reverse('articles:article-detail', args=[self.article.pk])
+        return reverse('articles:article-detail', args=[2])
 
 
 class HoursWorkedManager(models.Manager):
@@ -100,10 +100,13 @@ class Profile(models.Model):
 class BlacklistManager(models.Manager):
 
     def validate_words(self, obj):
+        blacklist = Blacklist.objects.all().values_list('word', flat=True)
+        print("BLACKLIST: ", blacklist)
         for word in obj:
-            for blacklist_obj in Blacklist.objects.all():
-                if word.lower().strip() == blacklist_obj.word:
-                    return True
+            if word in blacklist:
+                return True
+           # for blacklist_obj in Blacklist.objects.all():
+            ##       return True
         return False
 
 

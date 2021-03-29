@@ -18,7 +18,7 @@ from math import floor
 from django.http import HttpResponseRedirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 ### LOGIN AND REGISTRATION ############
 
@@ -72,6 +72,7 @@ class ArticleDetailView(LoginRequiredMixin, DetailView):
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
+    template_name = 'articles/article_detail.html'
     model = Comment
     form_class = CommentCreateForm
 
@@ -79,6 +80,16 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         form.instance.article_id = self.kwargs['pk']
         form.instance.user = self.request.user
         comment = form.cleaned_data.get('content').split(' ')
+        print("BEFORE FORM VALID")
+        if form.is_valid():
+            print("FORM IS VALID")
+            pass
+        else:
+            print("ELSE")
+            return HttpResponseRedirect(reverse(
+                'articles:article-detail', 
+                kwargs={'pk': self.kwargs['pk']}
+                ))
         if Blacklist.objects.validate_words(comment):
             messages.warning(self.request, 
                 f'Komentarz przekazany do moderacji.'
@@ -90,28 +101,31 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
                 'articles:article-detail', 
                 kwargs={'pk': self.kwargs['pk']}
                 ))
-        messages.success(self.request, 
+            messages.success(self.request, 
                 f'Dodano post.'
                 ) 
         return super().form_valid(form)
 
 
-class HoursListView(LoginRequiredMixin, ListView):
+class HoursListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'articles/hours.html'
 
     def get_queryset(self):
-        return User.objects.get(pk=self.kwargs['user_id'])
+        return User.objects.get(pk=self.request.user.id)
+
+    
+    def has_permission(self):
+        return self.get_queryset() == self.request.user 
 
 
 class ScheduleListView(LoginRequiredMixin, ListView):
     template_name = 'articles/schedule.html'
-
+    
     def get_queryset(self):
-        return User.objects.get(pk=self.kwargs['user_id'])
-
+        return User.objects.get(pk=self.request.user.id)
 
 @login_required(login_url='/articles/login')
-def my_site_view(request, user_id):
+def my_site_view(request):
     user = request.user
     profile = request.user.profile
     form = ProfileUpdateForm(instance=profile)
@@ -129,8 +143,8 @@ def my_site_view(request, user_id):
 
 
 @login_required(login_url='/articles/login')
-def finance_view(request, user_id):
-    user = User.objects.get(pk=user_id)
+def finance_view(request):
+    user = request.user
     payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
 
     obj = user.hoursworked_set.latest('start')

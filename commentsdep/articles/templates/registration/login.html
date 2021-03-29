@@ -9,8 +9,8 @@
     <body>
         <header class="bg-secondary">
             <div style="text-align: right;">
-                <a href="/articles/login" class="btn btn-link text-bold mr-2">Login</a>
-                <a href="/articles/register" class="btn btn-link">Register</a>
+                <a href="{% url 'login' %}" class="btn btn-link text-bold mr-2">Login</a>
+                <a href="{% url 'articles:register' %}" class="btn btn-link">Register</a>
             </div>
         </header>
         <div class="container" style="text-align: center;">
