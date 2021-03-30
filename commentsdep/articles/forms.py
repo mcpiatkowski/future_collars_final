@@ -23,6 +23,7 @@ class ArticleCreateForm(forms.ModelForm):
 
 
 class CommentCreateForm(forms.ModelForm):
+
     class Meta:
         model = Comment
         fields = [
@@ -35,14 +36,7 @@ class CommentCreateForm(forms.ModelForm):
             'class': 'form-input',
             'rows': 5,
             })
-        self.fields['content'].required=False
-
-
-    def clean(self):
-        print("CLEAN: ", self.cleaned_data)
-        content = self.cleaned_data['content']
-        if not content:
-            self.add_error('content', 'Komentarz pusty!') 
+        self.fields['content'].required = False
 
 
 class CommentForm(forms.Form):

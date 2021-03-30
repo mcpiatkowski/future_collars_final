@@ -20,14 +20,14 @@ urlpatterns = [
     path('article/<int:pk>/', ArticleDetailView.as_view(), name='article-detail'),
     path('register/', register_view, name='register'),
     path('my_site/', my_site_view, name='my-site'),
-    path('login_button/<int:user_id>/', login_button, name='login-button'),
-    path('logout_button/<int:user_id>', logout_button, name='logout-button'),
+    path('login_button/', login_button, name='login-button'),
+    path('logout_button/', logout_button, name='logout-button'),
     path('hours/', HoursListView.as_view(), name='hours'),
     path('finance/', finance_view, name='finance'),
     #path('schedule/<int:user_id>', schedule_view, name='schedule'),
     path('schedule/', ScheduleListView.as_view(), name='schedule'),
     path('article_create/', ArticleCreateView.as_view(), name='article-create'),
-    path('article/<int:pk>/comment_create', CommentCreateView.as_view(), name='comment-create'),
+    path('article/comment_create/<int:article_id>/', CommentCreateView.as_view(), name='comment-create'),
     #path('comment/', comment_add_view, name='comment')
     #path('', ArticleListView.as_view(), name='article-list'),
 ]
