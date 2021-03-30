@@ -29,7 +29,7 @@ urlpatterns = [
     #path('schedule/<int:user_id>', schedule_view, name='schedule'),
     path('schedule/', ScheduleListView.as_view(), name='schedule'),
     path('article_create/', ArticleCreateView.as_view(), name='article-create'),
-    path('article/<int:pk>/comment_create', CommentCreateView.as_view(), name='comment-create'),
+    path('article/comment_create/<int:article_id>/', CommentCreateView.as_view(), name='comment-create'),
     #path('comment/', comment_add_view, name='comment')
     #path('', ArticleListView.as_view(), name='article-list'),
 ]

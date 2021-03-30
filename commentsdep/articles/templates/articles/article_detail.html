@@ -32,7 +32,8 @@
     {% endfor %}
 
     <br>
-    <form method="post" action="{% url 'articles:comment-create' article.pk %}">
+    {{ form.errors }}
+    <form method="post" action="{% url 'articles:comment-create' article.id %}">
         {% csrf_token %}
         <div class="form-group">
             {{ form.as_p }}

@@ -26,7 +26,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 def register_view(request):
     if request.user.is_authenticated:
-        return redirect('/articles')
+        return redirect('/')
     else:
         form = CreateUserForm()
         if request.method == "POST":
@@ -38,11 +38,11 @@ def register_view(request):
                 user.is_active = False
                 user.save()
                 Profile.objects.create(user=user)
-            return redirect('/articles/login')
+            return redirect('/accounts/login')
         context = {
             'form': form,
         }
-        return render(request, 'articles/register.html', context)
+        return render(request, 'registration/register.html', context)
 
 
 class ArticleListView(LoginRequiredMixin, ListView):
@@ -78,20 +78,20 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentCreateForm
 
+    def get_success_url(self):
+        return reverse('articles:article-detail', args=[self.kwargs['article_id']])
+
+    def form_invalid(self, form):
+        messages.add_message(self.request,messages.WARNING,"Komentarz nie może być pusty!")
+        return redirect(reverse(
+                'articles:article-detail', 
+                args=[self.kwargs['article_id']]
+                ))
+    
     def form_valid(self, form):
-        form.instance.article_id = self.kwargs['pk']
+        form.instance.article_id = self.kwargs['article_id']
         form.instance.user = self.request.user
         comment = form.cleaned_data.get('content').split(' ')
-        print("BEFORE FORM VALID")
-        if form.is_valid():
-            print("FORM IS VALID")
-            pass
-        else:
-            print("ELSE")
-            return HttpResponseRedirect(reverse(
-                'articles:article-detail', 
-                kwargs={'pk': self.kwargs['pk']}
-                ))
         if Blacklist.objects.validate_words(comment):
             messages.warning(self.request, f'Komentarz wysłany do moderacji')
             messages.error(self.request, f'Proszę się wyrażać!')
@@ -171,7 +171,7 @@ def finance_view(request):
     return render(request, 'articles/finance.html', context)
 
 
-@login_required(login_url='/articles/login')
+@login_required(login_url='/accounts/login')
 def login_button(request, user_id):
     if request.user.is_authenticated:
         ip = request.META.get('REMOTE_ADDR')
