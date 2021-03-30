@@ -102,21 +102,33 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class HoursListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class HoursListView(LoginRequiredMixin, ListView):
     template_name = 'articles/hours.html'
+    paginate_by = 10
+    model = HoursWorked
 
+
+""" 
+    def get_queryset(self):
+        return User.objects.get(pk=self.request.user.id)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
+    def has_permission(self):
+        return self.get_queryset() == self.request.user 
+
+ """
+
+class ScheduleListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    template_name = 'articles/schedule.html'
+    
     def get_queryset(self):
         return User.objects.get(pk=self.request.user.id)
 
     def has_permission(self):
         return self.get_queryset() == self.request.user 
-
-
-class ScheduleListView(LoginRequiredMixin, ListView):
-    template_name = 'articles/schedule.html'
-    
-    def get_queryset(self):
-        return User.objects.get(pk=self.request.user.id)
 
 
 class MySiteView(LoginRequiredMixin, UpdateView):
