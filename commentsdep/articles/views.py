@@ -1,16 +1,18 @@
 from django.apps import apps
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.generic.list import ListView
 from django.views.generic import CreateView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 from .models import Article, HoursWorked, Profile, Blacklist, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CommentForm, CommentCreateForm, CreateUserForm, ProfileUpdateForm, ArticleCreateForm
+from .forms import CommentForm, CommentCreateForm, CreateUserForm, ProfileForm, ArticleCreateForm
 from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
@@ -91,19 +93,12 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         comment = form.cleaned_data.get('content').split(' ')
         if Blacklist.objects.validate_words(comment):
-            messages.warning(self.request, 
-                f'Komentarz przekazany do moderacji.'
-                )
-            messages.error(self.request, 
-                f'Proszę się wyrażać!'
-                )
-            return HttpResponseRedirect(reverse(
-                'articles:article-detail', 
-                kwargs={'pk': self.kwargs['article_id']}
+            messages.warning(self.request, f'Komentarz wysłany do moderacji')
+            messages.error(self.request, f'Proszę się wyrażać!')
+            return HttpResponseRedirect(reverse('articles:article-detail', 
+                kwargs={'pk': self.kwargs['pk']}
                 ))
-            messages.success(self.request, 
-                f'Dodano post.'
-                ) 
+            messages.success(self.request, f'Dodano post.') 
         return super().form_valid(form)
 
 
@@ -124,6 +119,29 @@ class ScheduleListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return User.objects.get(pk=self.request.user.id)
 
+
+class MySiteView(UpdateView):
+    template_name = 'articles/my_site.html'
+    model = Profile
+    fields = ['image']
+
+    def get_object(self, *args, **kwargs):
+        user = get_object_or_404(User, pk=self.request.user.id)
+
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = self.request.user
+        context['profile_form'] = ProfileForm(instance=self.request.user.profile)
+        return context
+
+
+    def form_valid(self, form):
+        form = ProfileForm(self.request.POST, self.request.FILES, instance=self.request.user.profile)
+        return super().form_valid(form)
+
+
+""" 
 @login_required(login_url='/articles/login')
 def my_site_view(request):
     user = request.user
@@ -140,18 +158,12 @@ def my_site_view(request):
         'login_status': user.profile.logged,
     }
     return render(request, 'articles/my_site.html', context)
-
+ """
 
 @login_required(login_url='/articles/login')
 def finance_view(request):
     user = request.user
     payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
-
-    obj = user.hoursworked_set.latest('start')
-    print("OBJ: ", obj)
-    obj_duration = obj.duration()
-    print("OBJ DURATIONN: ", obj_duration)
-
     context ={
         'user': user,
         'payslip': payslip,

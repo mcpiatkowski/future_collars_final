@@ -6,12 +6,12 @@
     <div class="columns">
         <div class="column col-5 col-lg-12 mx-2">
             <p style="margin-top: 15px; text-align: center;">
-                <a href="{% url 'articles:login-button' user.id %}">
+                <a href="{% url 'articles:login-button'%}">
                     {% if not login_status %}
                     <button class="btn ml-2" style="width: 10rem; height: 4rem;">Log in</button>
                     {% endif %}
                 </a>
-                <a href="{% url 'articles:logout-button' user.id %}">
+                <a href="{% url 'articles:logout-button'%}">
                     {% if login_status %}
                     <button class="btn" style="width: 10rem; height: 4rem;">Log out</button>
                     {% endif %}
@@ -25,7 +25,8 @@
         <div class="column col-6 col-ml-auto mt-2">
             <form method="POST" class="form-group" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ user_form.as_p }}
+                {{ profile_form.as_p }}
                 <input class="btn btn-primary" type="submit" name="Update">
             </form>
         </div>
