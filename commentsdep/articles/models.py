@@ -89,7 +89,7 @@ class HoursWorked(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.jpg')
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     rate = models.FloatField(null=True)
     logged = models.BooleanField(default=False)
 

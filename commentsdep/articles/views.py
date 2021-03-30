@@ -82,16 +82,6 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         form.instance.article_id = self.kwargs['pk']
         form.instance.user = self.request.user
         comment = form.cleaned_data.get('content').split(' ')
-        print("BEFORE FORM VALID")
-        if form.is_valid():
-            print("FORM IS VALID")
-            pass
-        else:
-            print("ELSE")
-            return HttpResponseRedirect(reverse(
-                'articles:article-detail', 
-                kwargs={'pk': self.kwargs['pk']}
-                ))
         if Blacklist.objects.validate_words(comment):
             messages.warning(self.request, f'Komentarz wysłany do moderacji')
             messages.error(self.request, f'Proszę się wyrażać!')
@@ -108,7 +98,6 @@ class HoursListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return User.objects.get(pk=self.request.user.id)
 
-    
     def has_permission(self):
         return self.get_queryset() == self.request.user 
 
@@ -120,7 +109,7 @@ class ScheduleListView(LoginRequiredMixin, ListView):
         return User.objects.get(pk=self.request.user.id)
 
 
-class MySiteView(UpdateView):
+class MySiteView(LoginRequiredMixin, UpdateView):
     template_name = 'articles/my_site.html'
     model = Profile
     fields = ['image']
@@ -137,28 +126,14 @@ class MySiteView(UpdateView):
 
 
     def form_valid(self, form):
-        form = ProfileForm(self.request.POST, self.request.FILES, instance=self.request.user.profile)
-        return super().form_valid(form)
+        submit_type = self.request.POST.get('submit_type')
+        if submit_type == 'image':
+            form = ProfileForm(self.request.POST, self.request.FILES, instance=self.request.user.profile)
+            return super().form_valid(form)
+        if submit_type == 'login':
+            print("LOGIN!")
+            return super().form_valid(form)
 
-
-""" 
-@login_required(login_url='/articles/login')
-def my_site_view(request):
-    user = request.user
-    profile = request.user.profile
-    form = ProfileUpdateForm(instance=profile)
-    if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            print("ELO!")
-            form.save()
-    context ={
-        'user': user,
-        'form': form,
-        'login_status': user.profile.logged,
-    }
-    return render(request, 'articles/my_site.html', context)
- """
 
 @login_required(login_url='/articles/login')
 def finance_view(request):

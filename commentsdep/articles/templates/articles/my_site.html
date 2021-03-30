@@ -27,7 +27,15 @@
                 {% csrf_token %}
                 {{ user_form.as_p }}
                 {{ profile_form.as_p }}
+                <input type="hidden" name="submit_type" value="image" />
                 <input class="btn btn-primary" type="submit" name="Update">
+            </form>
+        </div>
+        <div class="colum col-12">
+            <form method="POST" class="form-group">
+                {% csrf_token %}
+                <input type="hidden" name="submit_type" value="login" />
+                <button type="submit" class="btn ml-2" style="width: 10rem; height: 4rem;">Log in</button>
             </form>
         </div>
     </div>
