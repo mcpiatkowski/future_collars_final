@@ -3,14 +3,15 @@ from django.urls import path
 from .views import ArticleListView, ArticleDetailView
 from .views import (
     register_view, 
-    my_site_view, 
-    login_button, 
-    logout_button, 
-    finance_view, 
+    #my_site_view, 
+    login_button,
+    logout_button,
+    finance_view,
     ArticleCreateView, 
-    CommentCreateView, 
+    CommentCreateView,
     HoursListView,
     ScheduleListView,
+    MySiteView,
 )
 
 
@@ -19,9 +20,10 @@ urlpatterns = [
     path('', ArticleListView.as_view(), name='home'),
     path('article/<int:pk>/', ArticleDetailView.as_view(), name='article-detail'),
     path('register/', register_view, name='register'),
-    path('my_site/', my_site_view, name='my-site'),
-    path('login_button/<int:user_id>/', login_button, name='login-button'),
-    path('logout_button/<int:user_id>', logout_button, name='logout-button'),
+    #path('my_site/', my_site_view, name='my-site'),
+    path('my_site/', MySiteView.as_view(), name='my-site'),
+    path('login_button/', login_button, name='login-button'),
+    path('logout_button/', logout_button, name='logout-button'),
     path('hours/', HoursListView.as_view(), name='hours'),
     path('finance/', finance_view, name='finance'),
     #path('schedule/<int:user_id>', schedule_view, name='schedule'),

@@ -93,8 +93,11 @@ class Profile(models.Model):
     rate = models.FloatField(null=True)
     logged = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f'{self.user.username} Profile'
+#    def __str__(self):
+#        return f'{self.user.username} Profile'
+
+    def get_absolute_url(self):
+        return reverse('articles:my-site')
 
 
 class BlacklistManager(models.Manager):
