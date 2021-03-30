@@ -18,24 +18,22 @@
                 </a>
             </p>
         </div>
-        <div class="column col-6 col-lg-12 col-ml-auto mt-2">
-            <p class="tile-title" style="margin-top: 1rem;"><b>{{ user.username }}</b></p>
-            <p class="tile-subtitle">{{ user.email }}</p>
-        </div>
         <div class="column col-6 col-ml-auto mt-2">
-            <form method="POST" class="form-group" enctype="multipart/form-data">
+            <h4>{{ user.first_name }} {{ user.last_name }} </h4>
+            <form method="POST" class="form-group mt-2" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ user_form.as_p }}
-                {{ profile_form.as_p }}
+                <label class="form-label" for="id_username">Ksywka:</label>
+                {{ user_form.username }}
+                <label class="form-label" for="id_email">Adres email:</label>
+                {{ user_form.email }}
+                <label class="form-label" for="id_image">Avatar</label>
+                <span class="mx-2 text-tiny">
+                    Aktualny:
+                    <a href="/media/profile_pics/profile_nGZbXR6.jpg">profile_pics/profile_nGZbXR6.jpg</a>
+                </span>
+                {{ profile_form.image }}
                 <input type="hidden" name="submit_type" value="image" />
-                <input class="btn btn-primary" type="submit" name="Update">
-            </form>
-        </div>
-        <div class="colum col-12">
-            <form method="POST" class="form-group">
-                {% csrf_token %}
-                <input type="hidden" name="submit_type" value="login" />
-                <button type="submit" class="btn ml-2" style="width: 10rem; height: 4rem;">Log in</button>
+                <input class="btn btn-primary mt-2" type="submit" name="Update">
             </form>
         </div>
     </div>

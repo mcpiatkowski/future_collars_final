@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CommentForm, CommentCreateForm, CreateUserForm, ProfileForm, ArticleCreateForm
+from .forms import CommentForm, CommentCreateForm, CreateUserForm, ProfileForm, ArticleCreateForm, UserUpdateForm
 from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
@@ -96,7 +96,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
             messages.warning(self.request, f'Komentarz wysłany do moderacji')
             messages.error(self.request, f'Proszę się wyrażać!')
             return HttpResponseRedirect(reverse('articles:article-detail', 
-                kwargs={'pk': self.kwargs['pk']}
+                kwargs={'pk': self.kwargs['article_id']}
                 ))
             messages.success(self.request, f'Dodano post.') 
         return super().form_valid(form)
@@ -130,7 +130,9 @@ class MySiteView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_form'] = self.request.user
+        context['login_status'] = self.request.user.profile.logged
+        context['user'] = self.request.user
+        context['user_form'] = UserUpdateForm(instance=self.request.user)
         context['profile_form'] = ProfileForm(instance=self.request.user.profile)
         return context
 
@@ -140,12 +142,9 @@ class MySiteView(LoginRequiredMixin, UpdateView):
         if submit_type == 'image':
             form = ProfileForm(self.request.POST, self.request.FILES, instance=self.request.user.profile)
             return super().form_valid(form)
-        if submit_type == 'login':
-            print("LOGIN!")
-            return super().form_valid(form)
 
 
-@login_required(login_url='/articles/login')
+@login_required(login_url='/accounts/login')
 def finance_view(request):
     user = request.user
     payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
@@ -157,24 +156,24 @@ def finance_view(request):
 
 
 @login_required(login_url='/accounts/login')
-def login_button(request, user_id):
+def login_button(request):
     if request.user.is_authenticated:
         ip = request.META.get('REMOTE_ADDR')
         print("MOJE IP: ", ip)
-        user = User.objects.get(pk=user_id)
+        user = request.user
         user.profile.logged = True
         user.profile.save()
         login_status = user.profile.logged
         user.hoursworked_set.create(
             start=timezone.now(),
             )
-    return redirect("articles:my-site", user_id=user_id)
+    return redirect("articles:my-site")
 
 
-@login_required(login_url='/articles/login')
-def logout_button(request, user_id):
+@login_required(login_url='/accounts/login')
+def logout_button(request):
     if request.user.is_authenticated:
-        user = User.objects.get(pk=user_id)
+        user = request.user
         if user.profile.logged:
             user.profile.logged = False
             user.profile.save()
@@ -183,4 +182,4 @@ def logout_button(request, user_id):
             salary = apps.get_model('articles.HoursWorked').objects.total_salary(hours)
             apps.get_model('articles.Payslip').objects.update(hours)
             hours.save()
-    return redirect("articles:my-site", user_id=user_id)
+    return redirect("articles:my-site")

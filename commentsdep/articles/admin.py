@@ -31,7 +31,7 @@ class HoursWorkedAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    fields = ['user', 'image', 'rate']
+    fields = ['user', 'image', 'rate', 'logged']
 
 
 admin.site.register(Article, ArticleAdmin)
