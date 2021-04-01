@@ -17,7 +17,7 @@ from datetime import datetime, date
 from .filters import ArticleFilter
 import decimal
 from math import floor
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.template.defaultfilters import date
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -203,3 +203,13 @@ def logout_button(request):
             apps.get_model('articles.Payslip').objects.update(hours)
             hours.save()
     return redirect("articles:my-site")
+
+
+##### AJAX VIEWS ##########
+
+def get_time(request):
+    time = request.user.profile.get_last_pending_hours_worked()
+    data = {
+        'time': time
+    }
+    return JsonResponse(data)

@@ -12,6 +12,7 @@ from .views import (
     HoursListView,
     ScheduleListView,
     MySiteView,
+    get_time
 )
 
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path('schedule/', ScheduleListView.as_view(), name='schedule'),
     path('article_create/', ArticleCreateView.as_view(), name='article-create'),
     path('article/comment_create/<int:article_id>/', CommentCreateView.as_view(), name='comment-create'),
+    path('get_time/', get_time, name='get-time')
     #path('comment/', comment_add_view, name='comment')
     #path('', ArticleListView.as_view(), name='article-list'),
 ]

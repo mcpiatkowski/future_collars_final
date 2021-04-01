@@ -1,8 +1,13 @@
+from django.apps import apps
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from math import floor
-from django.core.exceptions import ValidationError 
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+
+import pytz
+import datetime
 
 
 PUBLICATION_STATUSES = (
@@ -76,6 +81,11 @@ class HoursWorked(models.Model):
     def get_absolute_url(self):
         return f"my_site/{self.id}"
 
+    def get_time(self):
+        tzname = 'Europe/Warsaw'
+        timezone.activate(pytz.timezone(tzname))
+        now = timezone.now()
+        return (now - self.start).total_seconds()
 
     #@property
     def duration(self):
@@ -101,8 +111,19 @@ class Profile(models.Model):
 #    def __str__(self):
 #        return f'{self.user.username} Profile'
 
+    def get_last_pending_hours_worked(self):
+        obj = apps.get_model('articles.HoursWorked').objects.filter(user__profile=self, start__isnull=False, finish__isnull=True).last()
+        if obj:
+            return obj.get_time()
+        return None
+
     def get_absolute_url(self):
         return reverse('articles:my-site')
+
+    def time_elapsed(self):
+        if self.start:
+            return datetime.datetime.now() - self.start
+        return None
 
 
 class BlacklistManager(models.Manager):
