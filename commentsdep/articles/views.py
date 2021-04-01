@@ -107,6 +107,9 @@ class HoursListView(LoginRequiredMixin, ListView):
     paginate_by = 10
     model = HoursWorked
 
+    def get_queryset(self):
+        return HoursWorked.objects.filter(user=self.request.user)
+
 
 """ 
     def get_queryset(self):

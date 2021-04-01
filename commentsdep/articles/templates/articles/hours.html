@@ -22,7 +22,7 @@
                 <th class="table-font" style="text-align: right;">{{ day.duration}}</th>
                 <th class="table-font" style="text-align: right;">
                     {% if day.salary %}    
-                    {{ day.salary}} PLN
+                    {{ day.salary|floatformat:2}} PLN
                     {% else %}
                     0.01 PLN
                     {% endif %}  
@@ -32,7 +32,7 @@
         </tbody>
     </table>
 
-<div class="pagination">
+<div class="pagination" style="justify-content: center;">
     <span class="step-links">
         {% if page_obj.has_previous %}
             <a href="?page=1">&laquo; first</a>
