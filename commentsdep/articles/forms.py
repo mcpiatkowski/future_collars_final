@@ -58,6 +58,11 @@ class CreateUserForm(UserCreationForm):
             'password2',
         ]
 
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-input'}),
+            'email': forms.TextInput(attrs={'class': 'form-input'}),
+        }
+
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:

@@ -16,22 +16,26 @@
             
             </section>
         </header>
-        <form method="POST" action="">
-            {% csrf_token %}
+        <div class="columns">
+            <div class="column col-4 col-lg-6 col-md-8 col-sm-10 col-mx-auto">
+                <form method="POST" action="">
+                    {% csrf_token %}
 
-            <div class="form-group" style="text-align:center">
-                <label class="form-label" for="input-example-1">{{ form.username.label }}</label>
-                {{ form.username }}
-                <label class="form-label" for="input-example-1">{{ form.email.label }}</label>
-                {{ form.email }}
-                <label class="form-label" for="input-example-1">{{ form.password1.label }}</label>
-                {{ form.password1 }}
-                <label class="form-label" for="input-example-1">{{ form.password2.label }} </label>
-                {{ form.password2 }}
+                    <div class="form-group" style="text-align:center">
+                        <label class="form-label">{{ form.username.label }}</label>
+                        {{ form.username }}
+                        <label class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        <label class="form-label">{{ form.password1.label }}</label>
+                        <input class="form-input" type="password" name="password1" autocomplete="new-password" required="" id="id_password1">
+                        <label class="form-label">{{ form.password2.label }} </label>
+                        <input class="form-input" type="password" name="password2" autocomplete="new-password" required="" id="id_password2">
+                    </div>
+                    <div style="text-align: center;">
+                        <input class="btn btn-primary" type="submit" name="create user" value="Register">
+                    </div>
+                </form>
             </div>
-            <div style="text-align: center;">
-                <input class="btn btn-primary" type="submit" name="create user" value="Register">
-            </div>
-        </form>
+        </div>
     </body>
 </html>
