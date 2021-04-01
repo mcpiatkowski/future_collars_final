@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from math import floor
+from django.core.exceptions import ValidationError 
 
 
 PUBLICATION_STATUSES = (
@@ -44,8 +45,12 @@ class Comment(models.Model):
     def __str__(self):
         return self.content
 
+    def clean(self):
+        if not self.content:
+            raise ValidationError("Pusty komentarz")
+
     def get_absolute_url(self):
-        return reverse('articles:article-detail', args=[2])
+        return reverse('articles:article-detail', args=[self.article.id])
 
 
 class HoursWorkedManager(models.Manager):
