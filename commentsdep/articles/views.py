@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 from django.views.generic import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
-from .models import Article, HoursWorked, Profile, Blacklist, Comment
+from .models import Article, HoursWorked, Profile, Blacklist, Comment, Payslip
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -18,6 +18,7 @@ from .filters import ArticleFilter
 import decimal
 from math import floor
 from django.http import HttpResponseRedirect
+from django.template.defaultfilters import date
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -162,10 +163,14 @@ class MySiteView(LoginRequiredMixin, UpdateView):
 @login_required(login_url='/accounts/login')
 def finance_view(request):
     user = request.user
-    payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
+    if user.payslip_set:
+        payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
+        month = payslip.month
+        month = date(month, 'F')
     context ={
         'user': user,
         'payslip': payslip,
+        'month': month,
     }
     return render(request, 'articles/finance.html', context)
 
