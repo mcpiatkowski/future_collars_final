@@ -167,6 +167,8 @@ def finance_view(request):
         payslip = apps.get_model('articles.Payslip').objects.filter(user=user).last()
         month = payslip.month
         month = date(month, 'F')
+        now = timezone.now()
+        print("NOW: ", now)
     context ={
         'user': user,
         'payslip': payslip,
