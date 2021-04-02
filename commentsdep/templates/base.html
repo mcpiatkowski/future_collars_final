@@ -64,7 +64,11 @@
             <a class="off-canvas-overlay" href="#close"></a>
             <div class="off-canvas-content">
                 <header>
+                    
                     <div class="top">
+                        <span id="timer" style="color: red;">
+                            12
+                        </span>
                         <span>Siema, {{ request.user }}</span>
                         <span style="margin-left: 5px">
                             <a class="btn btn-sm" href="{% url 'logout' %}"> logout </a>
@@ -92,8 +96,27 @@
             </div>
         </div>
         <script src="{% static 'articles/jquery.js' %}"></script>
+        <script src="{% static 'articles/main.js' %}"></script>
         <script>
-         
+        var interval = 1000;
+
+        var el = $("#timer");
+
+        function doAjax() {
+            $.ajax(
+                {
+                    url: "{% url 'articles:get-time' %}",
+                    dataType: 'json',
+                    success: function (response) {
+                        el.html(response.time);
+                        setTimeout(doAjax, interval);
+                    }
+                }
+        );
+        
+        }
+        setTimeout(doAjax, interval);
+
         </script>
     </body>
 </html>
