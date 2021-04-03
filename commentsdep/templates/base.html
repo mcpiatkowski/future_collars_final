@@ -66,8 +66,7 @@
                 <header>
                     
                     <div class="top">
-                        <span id="timer" style="color: red;">
-                            12
+                        <span id="" style="color: red;">
                         </span>
                         <span>Siema, {{ request.user }}</span>
                         <span style="margin-left: 5px">
@@ -109,6 +108,7 @@
                     dataType: 'json',
                     success: function (response) {
                         el.html(response.time);
+                        console.log(`RESPONSE ${response}`)
                         setTimeout(doAjax, interval);
                     }
                 }

@@ -85,14 +85,13 @@ class HoursWorked(models.Model):
         tzname = 'Europe/Warsaw'
         timezone.activate(pytz.timezone(tzname))
         now = timezone.now()
-        return (now - self.start).total_seconds()
+        return str(now - self.start).split('.')[0]
 
     #@property
     def duration(self):
         if self.finish:
             return str(self.finish - self.start).split('.')[0]
-        return 'ciężką pracą ludzie się bogacą'
-
+        return ''
     
     def get_duration(self):
         if self.finish:
@@ -115,7 +114,8 @@ class Profile(models.Model):
         obj = apps.get_model('articles.HoursWorked').objects.filter(user__profile=self, start__isnull=False, finish__isnull=True).last()
         if obj:
             return obj.get_time()
-        return None
+        obj = apps.get_model('articles.HoursWorked').objects.first()
+        return obj.duration()
 
     def get_absolute_url(self):
         return reverse('articles:my-site')

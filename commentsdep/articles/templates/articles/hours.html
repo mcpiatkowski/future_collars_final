@@ -19,7 +19,7 @@
                 <th class="table-font">{{ day.day }}</th>
                 <th class="table-font" style="text-align: right;">{{day.start|time:"H:i"}}</th>
                 <th class="table-font" style="text-align: right;">{{day.finish|time:"H:i"}}</th>
-                <th class="table-font" style="text-align: right;">{{ day.duration}}</th>
+                <th id="timer" class="table-font" style="text-align: right;">{{ day.duration}}</th>
                 <th class="table-font" style="text-align: right;">
                     {% if day.salary %}    
                     {{ day.salary|floatformat:2}} PLN
