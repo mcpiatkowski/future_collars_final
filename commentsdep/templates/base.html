@@ -95,7 +95,7 @@
             </div>
         </div>
         {% if page_obj %}
-            {% if page_obj.number == 1 and not day.salary %}
+            {% if page_obj.number == 1 and not day.finish %}
                 <script src="{% static 'articles/jquery.js' %}"></script>
                 <script src="{% static 'articles/main.js' %}"></script>
                 <script>

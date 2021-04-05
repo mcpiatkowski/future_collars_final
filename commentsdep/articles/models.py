@@ -120,8 +120,7 @@ class Profile(models.Model):
         if obj:
             return obj.get_time(), obj.get_current_salary()
         obj = apps.get_model('articles.HoursWorked').objects.first()
-        print("salary: ", obj.salary)
-        return obj.duration(), str(obj.salary) + ' PLN'
+        return obj.duration(), str(obj.salary) + ' sssPLN'
 
     def get_absolute_url(self):
         return reverse('articles:my-site')
@@ -157,10 +156,13 @@ class PayslipManager(models.Manager):
     
     def update(self, obj):
         payslip = Payslip.objects.all().last()
-        if payslip and payslip.month == obj.day:
-            payslip.month_hours += obj.get_duration()
-            payslip.month_salary += obj.salary
-            payslip.save()
+        if payslip:
+            p_month = payslip.month.strftime('%b')
+            h_month = obj.day.strftime('%b')
+            if p_month == h_month:
+                payslip.month_hours += obj.get_duration()
+                payslip.month_salary += obj.salary
+                payslip.save()
         else:
             Payslip.objects.create(
                 user=obj.user, 
