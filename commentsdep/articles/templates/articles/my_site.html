@@ -8,7 +8,7 @@
             <p style="margin-top: 15px; text-align: center;">
                 <a href="{% url 'articles:login-button'%}">
                     {% if not login_status %}
-                    <button class="btn ml-2" style="width: 10rem; height: 4rem;">Log in</button>
+                    <button id="logbtn" class="btn ml-2" style="width: 10rem; height: 4rem;">Log in</button>
                     {% endif %}
                 </a>
                 <a href="{% url 'articles:logout-button'%}">

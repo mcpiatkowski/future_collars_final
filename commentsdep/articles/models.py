@@ -100,6 +100,11 @@ class HoursWorked(models.Model):
             return total_time
         return 0
 
+    def get_current_salary(self):
+        rate = self.user.profile.rate
+        duration = (timezone.now() - self.start).total_seconds()
+        salary = floor((duration/3600)*100*rate)/100
+        return str(salary) + ' PLN'
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
@@ -113,9 +118,10 @@ class Profile(models.Model):
     def get_last_pending_hours_worked(self):
         obj = apps.get_model('articles.HoursWorked').objects.filter(user__profile=self, start__isnull=False, finish__isnull=True).last()
         if obj:
-            return obj.get_time()
+            return obj.get_time(), obj.get_current_salary()
         obj = apps.get_model('articles.HoursWorked').objects.first()
-        return obj.duration()
+        print("salary: ", obj.salary)
+        return obj.duration(), str(obj.salary) + ' PLN'
 
     def get_absolute_url(self):
         return reverse('articles:my-site')

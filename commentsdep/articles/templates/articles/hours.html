@@ -24,7 +24,7 @@
                     {% if day.salary %}    
                     {{ day.salary|floatformat:2}} PLN
                     {% else %}
-                    0.01 PLN
+                    <span id="salary_counter"> {{ day.salary|floatformat:2 }} PLN </span>
                     {% endif %}  
                 </th>
             </tr>

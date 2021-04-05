@@ -210,8 +210,11 @@ def logout_button(request):
 ##### AJAX VIEWS ##########
 
 def get_time(request):
-    time = request.user.profile.get_last_pending_hours_worked()
+#    time, salary = request.user.profile.get_last_pending_hours_worked()
+    time = request.user.profile.get_last_pending_hours_worked()[0]
+    salary = request.user.profile.get_last_pending_hours_worked()[1]
     data = {
-        'time': time
+        'salary': salary,
+        'time': time,
     }
     return JsonResponse(data)
