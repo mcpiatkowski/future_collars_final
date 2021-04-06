@@ -211,8 +211,8 @@ def logout_button(request):
 
 def get_time(request):
 #    time, salary = request.user.profile.get_last_pending_hours_worked()
-    time = request.user.profile.get_last_pending_hours_worked()[0]
-    salary = request.user.profile.get_last_pending_hours_worked()[1]
+    time, salary = request.user.profile.get_last_pending_hours_worked()
+    #salary = request.user.profile.get_last_pending_hours_worked()[1]
     data = {
         'salary': salary,
         'time': time,

@@ -2,7 +2,7 @@ from django.apps import apps
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
-from math import floor
+from math import floor, ceil
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
@@ -70,7 +70,7 @@ class HoursWorked(models.Model):
     day = models.DateField(auto_now_add=True)
     start = models.DateTimeField()
     finish = models.DateTimeField(null=True)
-    salary = models.FloatField(null=True, default=0.0)
+    salary = models.FloatField(null=True)
     objects = HoursWorkedManager()
 
 
@@ -96,7 +96,7 @@ class HoursWorked(models.Model):
     def get_duration(self):
         if self.finish:
             total_time = (self.finish - self.start).total_seconds()
-            total_time = floor((total_time/3600)*100)/100
+            total_time = ceil((total_time/3600)*100)/100
             return total_time
         return 0
 
@@ -120,7 +120,7 @@ class Profile(models.Model):
         if obj:
             return obj.get_time(), obj.get_current_salary()
         obj = apps.get_model('articles.HoursWorked').objects.first()
-        return obj.duration(), str(obj.salary) + ' sssPLN'
+        return obj.duration(), str(obj.salary) + ' PLN'
 
     def get_absolute_url(self):
         return reverse('articles:my-site')
