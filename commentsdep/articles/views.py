@@ -160,6 +160,12 @@ class MySiteView(LoginRequiredMixin, UpdateView):
             return super().form_valid(form)
 
 
+class FinanceView(LoginRequiredMixin, ListView):
+    template_name = 'articles/finance.html'
+    model = Payslip
+
+
+""" 
 @login_required(login_url='/accounts/login')
 def finance_view(request):
     user = request.user
@@ -175,7 +181,7 @@ def finance_view(request):
         'month': month,
     }
     return render(request, 'articles/finance.html', context)
-
+ """
 
 @login_required(login_url='/accounts/login')
 def login_button(request):

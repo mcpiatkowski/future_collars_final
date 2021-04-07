@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from math import floor, ceil
 from django.core.exceptions import ValidationError
+from django.template.defaultfilters import date
 from django.utils import timezone
 
 import pytz
@@ -181,3 +182,8 @@ class Payslip(models.Model):
 
     class Meta:
         ordering = ['-month']
+
+    
+    def get_month_str(self):
+        return date(self.month, 'F')
+        

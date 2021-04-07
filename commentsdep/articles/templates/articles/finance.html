@@ -2,8 +2,24 @@
 
 {% block content %}
 <h2>Finanse</h2>
-<p>Przepracowałeś/aś {{ payslip.month_hours|floatformat:2 }} godzin w tym miesiącu. </p>
-<p>Twoja wypłata za miesiąc {{ month|lower }}: {{ payslip.month_salary|floatformat:2 }} PLN </p>
-<p>Twoja stawka: {{ user.profile.rate }} </p>
-<h4>Czarna lista</h4>
+
+Stawka: {{ request.user.profile.rate }}
+
+{% for instance in object_list %}
+
+    <table class="table table-hover">
+
+        <thead>
+            <th>Miesiąc</th>
+            <th>Godziny</th>
+            <th>Pieniążki</th>
+        </thead>
+        <tbody>
+            <th class="table-font">{{ instance.get_month_str }}</th>
+            <th class="table-font">{{ instance.month_hours }} h</th>
+            <th class="table-font">{{ instance.month_salary }} PLN</th>
+        </tbody>
+    
+    </table>
+{% endfor %}
 {% endblock %}
