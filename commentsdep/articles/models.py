@@ -6,7 +6,7 @@ from math import floor, ceil
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import date
 from django.utils import timezone
-
+from ckeditor.fields import RichTextField
 import pytz
 import datetime
 
@@ -21,7 +21,8 @@ PUBLICATION_STATUSES = (
 class Article(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=256, verbose_name='Title')
-    content = models.TextField(verbose_name='Content')
+    content = RichTextField(blank=True, null=True)
+    #content = models.TextField(verbose_name='Content')
     snippet = models.CharField(max_length=120, verbose_name='Snippet')
     publication_datetime = models.DateTimeField(auto_now_add=True)
     

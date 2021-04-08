@@ -66,8 +66,6 @@
                 <header>
                     
                     <div class="top">
-                        <span id="" style="color: red;">
-                        </span>
                         <span>Siema, {{ request.user }}</span>
                         <span style="margin-left: 5px">
                             <a class="btn btn-sm" href="{% url 'logout' %}"> logout </a>
@@ -94,36 +92,8 @@
                 </div>
             </div>
         </div>
-        {% if page_obj %}
-            {% if page_obj.number == 1 %}
-                <script src="{% static 'articles/jquery.js' %}"></script>
-                <script src="{% static 'articles/main.js' %}"></script>
-                <script>
-
-                $(document).ready(() => {
-                    var interval = 1000;
-                    var el = $("#timer");
-                    var salary = $("#salary_counter");
-
-                    function doAjax() {
-                        $.ajax(
-                            {
-                                url: "{% url 'articles:get-time' %}",
-                                dataType: 'json',
-                                success: function (response) {
-                                    el.html(response.time);
-                                    salary.html(response.salary)
-                                    console.log(`RESPONSE ${response}`)
-                                    setTimeout(doAjax, interval);
-                                }
-                            }
-                    );
-                    
-                    }
-                    setTimeout(doAjax, interval);
-                })
-                </script>
-            {% endif %}
-        {% endif %}
+       {% block script %}
+       
+       {% endblock %}
     </body>
 </html>

@@ -5,7 +5,7 @@
 <div>
     <div class="container">
     <h2>{{ article.title }}</h2>
-    {{ article.content}}
+    {{ article.content|safe}}
     </div>
 
     {% for comment in article.comment_set.all %}
@@ -24,7 +24,9 @@
                 </strong> 
             </p>
             <p class="tile-subtitle"> 
+                {% autoescape on %}
                 {{ comment.content }} 
+                {% endautoescape %}
             </p>
         </div>
     </div>

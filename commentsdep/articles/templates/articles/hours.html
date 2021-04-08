@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
 <h2>Godziny</h2>
 <div style="margin-top: 15px;">
@@ -50,4 +52,38 @@
     </span>
 </div>
 
+{% endblock %}
+
+{% block script %}
+    {% if page_obj %}
+        {% if page_obj.number == 1 %}
+            <script src="{% static 'articles/jquery.js' %}"></script>
+            <script src="{% static 'articles/main.js' %}"></script>
+            <script>
+
+            $(document).ready(() => {
+                var interval = 1000;
+                var el = $("#timer");
+                var salary = $("#salary_counter");
+
+                function doAjax() {
+                    $.ajax(
+                        {
+                            url: "{% url 'articles:get-time' %}",
+                            dataType: 'json',
+                            success: function (response) {
+                                el.html(response.time);
+                                salary.html(response.salary)
+                                console.log(`RESPONSE ${response}`)
+                                setTimeout(doAjax, interval);
+                            }
+                        }
+                );
+                
+                }
+                setTimeout(doAjax, interval);
+            })
+            </script>
+        {% endif %}
+    {% endif %}
 {% endblock %}
