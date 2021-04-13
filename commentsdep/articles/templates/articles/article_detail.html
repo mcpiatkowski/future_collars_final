@@ -5,9 +5,12 @@
 <div>
     <div class="container">
     <h2>{{ article.title }}</h2>
+    <hr>
+    <br>
     {{ article.content|safe}}
     </div>
-
+    <hr>
+    <br>
     {% for comment in article.comment_set.all %}
 
     {% if comment.status == 'accepted'%}
@@ -24,9 +27,7 @@
                 </strong> 
             </p>
             <p class="tile-subtitle"> 
-                {% autoescape on %}
                 {{ comment.content }} 
-                {% endautoescape %}
             </p>
         </div>
     </div>
