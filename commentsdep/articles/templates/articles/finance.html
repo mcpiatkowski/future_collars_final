@@ -17,7 +17,7 @@ Stawka: {{ request.user.profile.rate }}
         <tbody>
             <th class="table-font">{{ instance.get_month_str }}</th>
             <th class="table-font">{{ instance.month_hours }} h</th>
-            <th class="table-font">{{ instance.month_salary }} PLN</th>
+            <th class="table-font">{{ instance.month_salary|floatformat:2 }} PLN</th>
         </tbody>
     
     </table>
